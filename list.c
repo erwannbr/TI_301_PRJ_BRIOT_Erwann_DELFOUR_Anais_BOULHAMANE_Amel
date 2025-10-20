@@ -6,3 +6,5 @@ t_std_list * CreateEmptyList () {
     list.h = NULL;
     return list;
 }
+
+void Display
