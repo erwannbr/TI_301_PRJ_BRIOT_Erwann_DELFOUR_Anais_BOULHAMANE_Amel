@@ -3,7 +3,6 @@
 //
 
 #include "cell.h"
-
 #include <stdlib.h>
 
 t_cell *create_cell(int arrival, float probability) {
