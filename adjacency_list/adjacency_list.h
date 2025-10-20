@@ -19,7 +19,7 @@ t_adjacency_list* empty_adjacency_list(int size) {
     if (adjacency_list.list == NULL) {
         return NULL;
     }
-
+    for (int i = 0; i < size; i++) {}
 
 
 
