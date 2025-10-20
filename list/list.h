@@ -5,7 +5,7 @@
 #ifndef LIST_H
 #define LIST_H
 #include <stdio.h>
-#include "cell.h"
+#include "cell/cell.h"
 #include "utils/utils.h"
 
 typedef struct s_std_list

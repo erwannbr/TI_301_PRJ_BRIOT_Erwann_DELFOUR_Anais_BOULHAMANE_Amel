@@ -6,6 +6,8 @@
 #define ADJACENCY_LIST_H
 #include <stdlib.h>
 
+#include "list/list.h"
+
 typedef struct s_adjacency_list {
     t_std_list *list;
     int size;

@@ -2,11 +2,11 @@
 #define __UTILS_H__
 #include "adjacency_list/adjacency_list.h"
 
-adjacency_list readGraph(const char *filename) {
+t_adjacency_list readGraph(const char *filename) {
     FILE *file = fopen(filename, "rt"); // read-only, text
     int nbvert, start, end;
     float proba;
-    //declare the variable for the adjacency list
+    t_adjacency_list *p_adj_list = empty_adjacency_list(nbvert);
     if (file == NULL)
     {
     perror("Could not open file for reading");

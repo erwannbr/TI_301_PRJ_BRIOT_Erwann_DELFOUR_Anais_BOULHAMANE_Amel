@@ -3,6 +3,10 @@
 #include <string.h>
 
 #include "utils/utils.h"
+#include "adjacency_list/adjacency_list.h"
+
+
+adjacency_list readGraph(const char *filename);
 
 static char *getID(int i)
 {
