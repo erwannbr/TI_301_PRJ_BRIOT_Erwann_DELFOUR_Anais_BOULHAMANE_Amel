@@ -2,12 +2,11 @@
 // Created by Boulhamane Amel on 20/10/2025.
 //
 
+// cell/cell.h
 #ifndef CELL_H
 #define CELL_H
-#include <stdio.h>
 #include <stdlib.h>
-#include "../list/list.h"
-#include "../utils/utils.h"
+#include <stdio.h>
 
 typedef struct s_cell {
     int arrival;

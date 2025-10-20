@@ -2,6 +2,8 @@
 // Created by Boulhamane Amel on 20/10/2025.
 //
 #include "adjacency_list.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 t_adjacency_list* empty_adjacency_list(int size) {
     t_adjacency_list *p_adj_list = malloc(sizeof(t_adjacency_list));
@@ -19,10 +21,11 @@ t_adjacency_list* empty_adjacency_list(int size) {
     return p_adj_list;
 }
 
-void display_adjacency_list(t_adjacency_list list) {
-    for (int i = 0; i < list.size; i++) {
-        printf("List for vertex %d : ", i + 1);
-        DisplayList(list.array[i]);
+void display_adjacency_list(t_adjacency_list *p_adj_list) {
+    for (int i = 0; i < p_adj_list->size; i++) {
+        printf("Sommet %d : ", i + 1);
+        DisplayList(p_adj_list->array[i]);
         printf("\n");
     }
 }
+

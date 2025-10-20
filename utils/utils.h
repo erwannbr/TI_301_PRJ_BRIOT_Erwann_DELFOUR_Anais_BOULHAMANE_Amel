@@ -4,5 +4,4 @@
 
 t_adjacency_list readGraph(const char *filename);
 
-
 #endif

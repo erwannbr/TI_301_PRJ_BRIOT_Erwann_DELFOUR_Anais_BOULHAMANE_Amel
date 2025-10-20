@@ -3,17 +3,17 @@
 //
 #ifndef ADJACENCY_LIST_H
 #define ADJACENCY_LIST_H
+
 #include "../list/list.h"
 #include <stdbool.h>
-#include <stdlib.h>
-
 
 typedef struct s_adjacency_list {
     t_std_list *array;
     int size;
 }t_adjacency_list;
 
+t_adjacency_list readGraph(const char *filename);
 t_adjacency_list* empty_adjacency_list(int size);
-void display_adjacency_list(t_std_list list);
+void display_adjacency_list(t_adjacency_list *p_adj_list);
 
 #endif //ADJACENCY_LIST_H

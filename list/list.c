@@ -3,18 +3,18 @@
 //
 #include "list.h"
 
-t_std_list * CreateEmptyList () {
-    t_std_list *list = (t_std_list*)malloc(sizeof(t_std_list));
-
-    list->head = NULL;
-
+t_std_list createEmptyList(void) {
+    t_std_list list;
+    list.head = NULL;
     return list;
 }
 
 void DisplayList (t_std_list list) {
     t_cell* curr = list.head;
     printf("[head @]");
-
+    if (curr==NULL) {
+        return;
+    }
     while (curr->next != NULL) {
         printf ("(%d,%f) @->", curr->arrival,curr->probability);
         curr=curr->next;
@@ -25,15 +25,8 @@ void DisplayList (t_std_list list) {
     return;
 }
 
-void AddCell(t_std_list *list, p_cell cell) {
-    p_cell curr = list->head;
-
-    if (curr == NULL){
-        curr = curr->next;
-    }
-
-    curr->next = cell;
-    cell->next = NULL;
-
-    return;
+void addCellToList(t_std_list *list, int arrival, float probability) {
+    t_cell *new_cell = create_cell(arrival, probability);
+    new_cell->next = list->head;
+    list->head = new_cell;
 }

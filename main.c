@@ -7,7 +7,7 @@ int main() {
     printf("Hello, World!\n");
     printf("it works");
     t_adjacency_list new_adj_list = readGraph("../DATA/exemple1.txt");
-    display_adjacency_list(new_adj_list);
+    display_adjacency_list(&new_adj_list);
     return 0;
 
 }
