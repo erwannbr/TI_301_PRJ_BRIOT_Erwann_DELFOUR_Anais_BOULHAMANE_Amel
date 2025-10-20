@@ -14,4 +14,5 @@ typedef struct s_std_list
 } t_std_list;
 
 t_std_list * CreateEmptyList ();
+void DisplayList(t_std_list);
 #endif //LIST_H
