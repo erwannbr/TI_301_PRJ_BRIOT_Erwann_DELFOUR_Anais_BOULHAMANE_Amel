@@ -1,12 +1,12 @@
 //
 // Created by Boulhamane Amel on 20/10/2025.
 //
-
 #ifndef ADJACENCY_LIST_H
 #define ADJACENCY_LIST_H
+#include "../list/list.h"
+#include <stdbool.h>
 #include <stdlib.h>
 
-#include "list/list.h"
 
 typedef struct s_adjacency_list {
     t_std_list *list;

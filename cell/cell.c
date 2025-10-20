@@ -2,7 +2,7 @@
 // Created by Boulhamane Amel on 20/10/2025.
 //
 
-#include "cell/cell.h"
+#include "cell.h"
 #include <stdlib.h>
 
 t_cell *create_cell(int arrival, float probability) {
