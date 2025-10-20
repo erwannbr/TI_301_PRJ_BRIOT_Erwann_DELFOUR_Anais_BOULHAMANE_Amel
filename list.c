@@ -10,3 +10,14 @@ t_std_list * CreateEmptyList () {
 }
 
 void Display
+
+void AddCell(t_std_list * list, p_cell cell) {
+    p_cell current = list->head;
+    
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = cell;
+
+    return; 
+}
