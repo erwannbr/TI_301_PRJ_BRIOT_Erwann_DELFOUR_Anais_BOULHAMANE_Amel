@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils/utils.h"
-#include "adjacency_list/adjacency_list.h"
+#include "../utils/utils.h"
+#include "../adjacency_list/adjacency_list.h"
 
 t_adjacency_list readGraph(const char *filename) {
     FILE *file = fopen(filename, "rt"); // read-only, text
