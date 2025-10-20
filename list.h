@@ -5,6 +5,9 @@
 #ifndef LIST_H
 #define LIST_H
 #include <stdio.h>
+#include "cell.h"
+#include "utils.h"
+
 typedef struct s_std_list
 {
     p_cell head;
