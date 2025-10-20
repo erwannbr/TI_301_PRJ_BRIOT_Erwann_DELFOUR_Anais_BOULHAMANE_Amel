@@ -18,3 +18,4 @@ void DisplayList (t_std_list list) {
     }
     printf ("(%d,%f)" , curr->arrival,curr->probability);
 }
+
