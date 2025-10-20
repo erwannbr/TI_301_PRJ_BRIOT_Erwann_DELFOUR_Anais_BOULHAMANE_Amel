@@ -6,7 +6,7 @@
 #define LIST_H
 #include <stdio.h>
 #include "cell.h"
-#include "utils.h"
+#include "utils/utils.h"
 
 typedef struct s_std_list
 {
