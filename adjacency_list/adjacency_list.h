@@ -14,5 +14,6 @@ typedef struct s_adjacency_list {
 }t_adjacency_list;
 
 t_adjacency_list* empty_adjacency_list(int size);
+void display_adjacency_list(t_std_list list);
 
 #endif //ADJACENCY_LIST_H

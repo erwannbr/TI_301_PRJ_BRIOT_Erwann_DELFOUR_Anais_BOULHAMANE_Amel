@@ -18,3 +18,13 @@ t_adjacency_list* empty_adjacency_list(int size) {
     }
     return p_adj_list;
 }
+
+void display_adjacency_list(t_std_list list) {
+    t_cell *curr = list.head;
+    while (curr != NULL) {
+        printf(" -> (%d,%.2f)", curr->arrival, curr->probability);
+        curr = curr->next;
+    }
+}
+
+
