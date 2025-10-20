@@ -9,7 +9,7 @@
 
 
 typedef struct s_adjacency_list {
-    t_std_list *list;
+    t_std_list *array;
     int size;
 }t_adjacency_list;
 
