@@ -19,3 +19,15 @@ void DisplayList (t_std_list list) {
     printf ("(%d,%f)" , curr->arrival,curr->probability);
 }
 
+void AddCell(t_std_list *list, p_cell cell) {
+    p_cell curr = list->head;
+
+    if (curr == NULL){
+        curr = curr->next;
+    }
+
+    curr->next = cell;
+    cell->next = NULL;
+
+    return;
+}
