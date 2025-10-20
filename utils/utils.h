@@ -3,5 +3,6 @@
 #include "../adjacency_list/adjacency_list.h"
 
 t_adjacency_list readGraph(const char *filename);
+void checkIfMarkov(t_adjacency_list list);
 
 #endif

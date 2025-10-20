@@ -8,7 +8,7 @@
 t_adjacency_list readGraph(const char *filename) {
     FILE *file = fopen(filename, "rt");
     if (!file) {
-        perror("Erreur lors de l'ouverture du fichier");
+        perror("Could not open file for reading");
         exit(EXIT_FAILURE);
     }
 
@@ -16,12 +16,11 @@ t_adjacency_list readGraph(const char *filename) {
     float proba;
 
     if (fscanf(file, "%d", &nb_vertices) != 1) {
-        perror("Erreur de lecture du nombre de sommets");
+        perror("Could not read number of vertices");
         fclose(file);
         exit(EXIT_FAILURE);
     }
 
-    /* utilise la fonction demandée */
     t_adjacency_list *gp = empty_adjacency_list(nb_vertices);
 
     while (fscanf(file, "%d %d %f", &start, &end, &proba) == 3) {
@@ -30,9 +29,8 @@ t_adjacency_list readGraph(const char *filename) {
 
     fclose(file);
 
-    /* on retourne par valeur; on libère juste le conteneur (pas le tableau) */
-    t_adjacency_list g = *gp;  // copie superficielle : g.array reste valide
-    free(gp);                  // OK : on garde g.array alloué
+    t_adjacency_list g = *gp;
+    free(gp);
     return g;
 }
 
@@ -58,4 +56,31 @@ static char *getID(int i)
     buffer[index] = '\0';
 
     return buffer;
+}
+
+void checkIfMarkov(t_adjacency_list list) {
+    int is_markov = 1;
+
+    for (int i = 0; i < list.size; i++) {
+        float total_proba = 0;
+        t_std_list current_list = list.array[i];
+        t_cell * p_current_cell = current_list.head;
+
+        while (p_current_cell != NULL) {
+            total_proba += p_current_cell->probability;
+            p_current_cell = p_current_cell->next;
+        }
+
+        // Check if this node's probabilities sum to 1
+        if (total_proba < 0.99 || total_proba > 1.01) {
+            is_markov = 0;
+            break;
+        }
+    }
+
+    if (is_markov) {
+        printf("The graph is a Markov graph\n");
+    } else {
+        printf("The graph is not a Markov graph\n");
+    }
 }

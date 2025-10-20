@@ -1,6 +1,3 @@
-//
-// Created by Boulhamane Amel on 20/10/2025.
-//
 #include "adjacency_list.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,9 +18,11 @@ t_adjacency_list* empty_adjacency_list(int size) {
     return p_adj_list;
 }
 
-void display_adjacency_list(t_adjacency_list *p_adj_list) {
+void display_adjacency_list(t_adjacency_list * p_adj_list) {
+    if (p_adj_list == NULL) return;
+
     for (int i = 0; i < p_adj_list->size; i++) {
-        printf("Sommet %d : ", i + 1);
+        printf("List for vortex %d : ", i + 1);
         DisplayList(p_adj_list->array[i]);
         printf("\n");
     }

@@ -11,16 +11,17 @@ t_std_list createEmptyList(void) {
 
 void DisplayList (t_std_list list) {
     t_cell* curr = list.head;
-    printf("[head @]");
+    printf("[head @] -> ");
+
     if (curr==NULL) {
         return;
     }
     while (curr->next != NULL) {
-        printf ("(%d,%f) @->", curr->arrival,curr->probability);
+        printf ("(%d, %.2f) @-> ", curr->arrival,curr->probability);
         curr=curr->next;
     }
     
-    printf ("(%d,%f)" , curr->arrival,curr->probability);
+    printf ("(%d, %.2f)" , curr->arrival,curr->probability);
 
     return;
 }
