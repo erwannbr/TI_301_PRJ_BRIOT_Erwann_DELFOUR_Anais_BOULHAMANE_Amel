@@ -1,7 +1,6 @@
 //
 // Created by Boulhamane Amel on 20/10/2025.
 //
-#include "adjacency_list.h"
 
 t_adjacency_list* empty_adjacency_list(int size) {
     t_adjacency_list *p_adj_list = malloc(sizeof(t_adjacency_list));
