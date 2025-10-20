@@ -6,8 +6,8 @@
 #define CELL_H
 #include <stdio.h>
 #include <stdlib.h>
-#include "list/list.h"
-#include "utils/utils.h"
+#include "../list/list.h"
+#include "../utils/utils.h"
 
 typedef struct s_cell {
     int arrival;
