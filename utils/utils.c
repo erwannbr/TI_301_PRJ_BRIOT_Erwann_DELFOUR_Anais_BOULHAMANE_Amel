@@ -117,5 +117,5 @@ void exportToMermaid(t_adjacency_list graph, const char *filename) {
     }
 
     fclose(file);
-    printf(" Mermaid file '%s' generated successfully.\n", filename);
+    printf("Mermaid file '%s' generated successfully.\n", filename);
 }

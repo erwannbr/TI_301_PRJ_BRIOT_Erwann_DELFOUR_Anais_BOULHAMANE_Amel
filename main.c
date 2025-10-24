@@ -4,17 +4,20 @@
 
 
 int main() {
-    t_adjacency_list exemple1 = readGraph("../DATA/exemple1.txt");
-    t_adjacency_list example_valid_step3 = readGraph("../DATA/example_valid_step3.txt");
+    t_adjacency_list exemple1 = readGraph("DATA/exemple1.txt");
+    t_adjacency_list * example_valid_step3 = empty_adjacency_list(5);
 
     printf("Step 1 validation :\n");
     display_adjacency_list(&exemple1);
+    printf("\n");
 
     printf("Step 2 validation :\n");
     checkIfMarkov(exemple1);
+    printf("\n");
 
     printf("Step 3 validation :\n");
-    exportToMermaid(example_valid_step3, "../DATA/example_valid_step3.txt");
+    exportToMermaid(*example_valid_step3, "DATA/example_valid_step3.txt");
+    printf("\n");
     
     return 0;
 }
