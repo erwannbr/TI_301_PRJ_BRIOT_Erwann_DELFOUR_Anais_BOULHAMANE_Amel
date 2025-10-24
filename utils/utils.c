@@ -84,3 +84,38 @@ void checkIfMarkov(t_adjacency_list list) {
         printf("The graph is not a Markov graph\n");
     }
 }
+
+void exportToMermaid(t_adjacency_list graph, const char *filename) {
+    FILE *file = fopen(filename, "wt");
+    if (file == NULL) {
+        perror("Could not open file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "---\n");
+    fprintf(file, "config:\n");
+    fprintf(file, "   layout: elk\n");
+    fprintf(file, "   theme: neo\n");
+    fprintf(file, "   look: neo\n");
+    fprintf(file, "---\n\n");
+
+    fprintf(file, "flowchart LR\n");
+
+
+    for (int i = 0; i < graph.size; i++) {
+        fprintf(file, "%s((%d))\n", getID(i + 1), i + 1);
+    }
+    fprintf(file, "\n");
+
+
+    for (int i = 0; i < graph.size; i++) {
+        t_cell *current = graph.array[i].head;
+        while (current != NULL) {
+            fprintf(file, "%s -->|%.2f|%s\n",getID(i + 1), current->probability,  getID(current->arrival));
+            current = current->next;
+        }
+    }
+
+    fclose(file);
+    printf(" Mermaid file '%s' generated successfully.\n", filename);
+}
