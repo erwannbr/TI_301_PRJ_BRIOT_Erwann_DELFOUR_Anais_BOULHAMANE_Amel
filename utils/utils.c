@@ -111,7 +111,10 @@ void exportToMermaid(t_adjacency_list graph, const char *filename) {
     for (int i = 0; i < graph.size; i++) {
         t_cell *current = graph.array[i].head;
         while (current != NULL) {
-            fprintf(file, "%s -->|%.2f|%s\n",getID(i + 1), current->probability,  getID(current->arrival));
+            fprintf(file, "%s -->|%.4f|%s\n", 
+                   getID(i + 1), 
+                   current->probability,  
+                   getID(current->arrival));
             current = current->next;
         }
     }
