@@ -1,10 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "../utils/utils.h"
 #include "../adjacency_list/adjacency_list.h"
 
+/**
+ * @brief Reads a graph from a file and creates its adjacency list
+ * @param filename Path to the file containing graph data
+ * @return Adjacency list representation of the graph
+ * @note File format: first line = number of vertices,
+ *       following lines = "start end probability"
+ * @note Exits program on file error
+ */
 t_adjacency_list readGraph(const char *filename) {
     FILE *file = fopen(filename, "rt");
     if (!file) {
@@ -34,7 +41,14 @@ t_adjacency_list readGraph(const char *filename) {
     return g;
 }
 
-//Fixed get ID
+
+/**
+ * @brief Converts vertex index to alphabetic ID (1->A, 27->AA, etc.)
+ * @param i Vertex index (1-based)
+ * @return Static string containing the alphabetic ID
+ * @note Uses rotating buffer to allow multiple calls in same expression
+ * @warning Returned pointer is static and will be overwritten after 20 calls
+ */
 static char *getID(int i)
 {
     static char buffer[20][10];  // Array of buffers
@@ -62,6 +76,12 @@ static char *getID(int i)
 }
 
 
+/**
+ * @brief Checks if the graph satisfies Markov chain properties
+ * @param list Adjacency list to check
+ * @note Verifies that outgoing probabilities from each vertex sum to 1.0
+ * @note Tolerance: ±0.01 for floating-point comparison
+ */
 void checkIfMarkov(t_adjacency_list list) {
     int is_markov = 1;
 
@@ -90,6 +110,13 @@ void checkIfMarkov(t_adjacency_list list) {
 }
 
 
+/**
+ * @brief Exports the graph to Mermaid diagram format
+ * @param graph Adjacency list to export
+ * @param filename Output file path
+ * @note Creates a flowchart with ELK layout and neo theme
+ * @note Exits program on file error
+ */
 void exportToMermaid(t_adjacency_list graph, const char *filename) {
     FILE *file = fopen(filename, "wt");
     if (file == NULL) {
@@ -125,17 +152,31 @@ void exportToMermaid(t_adjacency_list graph, const char *filename) {
     printf("Mermaid file '%s' generated successfully.\n", filename);
 }
 
+/**
+ * @brief Converts adjacency list to Tarjan vertex array
+ * @param graph Pointer to adjacency list
+ * @return Array of Tarjan vertices for SCC algorithm
+ */
 t_tarjan_vertex * GraphIntoTar (t_adjacency_list* graph) {
     t_tarjan_vertex * vertices = CreateArr(graph->size);
     return vertices;
 }
 
+/**
+ * @brief Creates an empty stack
+ * @return Pointer to new stack
+ */
 t_stack * CreateStack () {
     t_stack * s = malloc (sizeof(t_stack));
     s->head = NULL;
     return s;
 }
 
+/**
+ * @brief Pushes a vertex ID onto the stack
+ * @param s Pointer to stack
+ * @param vertex_id ID of vertex to push
+ */
 void push (t_stack *s, int vertex_id) {
     t_stack_node * new = malloc (sizeof(t_stack_node));
     new->vertex_id = vertex_id;
@@ -143,6 +184,11 @@ void push (t_stack *s, int vertex_id) {
     s->head = new;
 }
 
+/**
+ * @brief Pops a vertex ID from the stack
+ * @param s Pointer to stack
+ * @return Vertex ID, or -1 if stack is empty
+ */
 int pop (t_stack *s) {
     if (s->head ==NULL) return -1;
     int val = s->head->vertex_id;
@@ -152,6 +198,11 @@ int pop (t_stack *s) {
     return val;
 }
 
+/**
+ * @brief Checks if stack is empty
+ * @param s Pointer to stack
+ * @return 1 if empty, 0 otherwise
+ */
 int isEmpty (t_stack *s) {
     return (s->head == NULL);
 }
