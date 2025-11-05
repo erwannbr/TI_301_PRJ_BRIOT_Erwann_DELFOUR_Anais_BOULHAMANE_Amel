@@ -124,3 +124,34 @@ void exportToMermaid(t_adjacency_list graph, const char *filename) {
     fclose(file);
     printf("Mermaid file '%s' generated successfully.\n", filename);
 }
+
+t_tarjan_vertex * GraphIntoTar (t_adjacency_list* graph) {
+    t_tarjan_vertex * vertices = CreateArr(graph->size);
+    return vertices;
+}
+
+t_stack * CreateStack () {
+    t_stack * s = malloc (sizeof(t_stack));
+    s->head = NULL;
+    return s;
+}
+
+void push (t_stack *s, int vertex_id) {
+    t_stack_node * new = malloc (sizeof(t_stack_node));
+    new->vertex_id = vertex_id;
+    new->next = s->head;
+    s->head = new;
+}
+
+int pop (t_stack *s) {
+    if (s->head ==NULL) return -1;
+    int val = s->head->vertex_id;
+    t_stack_node *tmp = s->head;
+    s->head= s->head->next;
+    free(tmp);
+    return val;
+}
+
+int isEmpty (t_stack *s) {
+    return (s->head == NULL);
+}
