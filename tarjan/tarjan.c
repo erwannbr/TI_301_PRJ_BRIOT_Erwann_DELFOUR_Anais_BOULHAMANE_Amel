@@ -3,8 +3,10 @@
 //
 #include "tarjan.h"
 #include "../cell/cell.h"
+#include "../utils/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 t_tarjan_vertex * CreateArr (int n) {
     t_tarjan_vertex * array = malloc (n * sizeof (t_tarjan_vertex));
@@ -21,13 +23,13 @@ t_tarjan_vertex * CreateArr (int n) {
     return array;
 }
 
-t_class * CreateClass (char * name_of_class) {
-    t_class * c = malloc(sizeof(t_class));
+p_class CreateClass (char * name_of_class) {
+    p_class c = malloc(sizeof(t_class));
     if (!c) {
         printf("Allocation of class failed");
         return NULL;
     }
-    c->name = name_of_class;
+    strcpy(c->name, name_of_class);
     c->vertices = malloc (4 * sizeof (int));
     c->nb_vertices = 0;
     c->size = 4;
@@ -71,7 +73,7 @@ void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p
     (*index)++;
     push(S,v);
     Ver[v].in_stack=1;
-    t_cell *neigh = graph.array[v].head;
+    p_cell neigh = graph.array[v].head;
 
     while (neigh != NULL) {
         int w = neigh->arrival -1;
@@ -88,7 +90,7 @@ void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p
     }
     if (Ver[v].link_nb == Ver[v].class_nb) {
         char name[10];
-        sprintf(name, "C%d", part->size + 1);
+        sprintf(name, "C%d", part->nb_class + 1);
         p_class cls = CreateClass(name);
 
         int w;
@@ -102,7 +104,7 @@ void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p
     }
 }
 
-p_partition *Tarjan (t_adjacency_list graph) {
+p_partition Tarjan (t_adjacency_list graph) {
     int n = graph.size;
     p_tarjan_vertex Ver = CreateArr(n);
     t_stack *S = CreateStack();
