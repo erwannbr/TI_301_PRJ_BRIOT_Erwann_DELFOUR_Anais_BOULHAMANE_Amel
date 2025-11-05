@@ -66,6 +66,7 @@ t_partition *CreatePartition() {
     if (!p->classes) {
         free(p);
         printf("Allocation of classes array failed\n");
+        exit(EXIT_FAILURE);
     }
     p->nb_class = 0;
     p->size = 4;
