@@ -4,8 +4,8 @@
 
 #ifndef TARJAN_H
 #define TARJAN_H
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "adjacency_list.h"
 
 typedef struct s_tarjan_vertex {
     int id;

@@ -2,6 +2,8 @@
 // Created by anais on 03/11/2025.
 //
 #include "tarjan.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 t_tarjan_vertex * CreateArr (int n) {
     t_tarjan_vertex * array = malloc (n * sizeof (t_tarjan_vertex));
