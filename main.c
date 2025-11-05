@@ -32,6 +32,7 @@ int main() {
         }
         printf("}\n");
     }
+    printf("\n");
 
     printf("Part 2: step 1 validation :\n");
 
