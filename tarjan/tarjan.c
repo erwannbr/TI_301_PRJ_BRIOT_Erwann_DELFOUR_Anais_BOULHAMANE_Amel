@@ -125,7 +125,7 @@ void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p
     }
 }
 
-p_partition Tarjan (t_adjacency_list graph) {
+p_partition tarjan (t_adjacency_list graph) {
     int n = graph.size;
     p_tarjan_vertex Ver = CreateArr(n);
     t_stack *S = CreateStack();

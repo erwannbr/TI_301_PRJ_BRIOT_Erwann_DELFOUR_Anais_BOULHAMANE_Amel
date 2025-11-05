@@ -11,7 +11,7 @@ typedef struct {
     t_link *links;
     int size;
     int length;
-} t_link_array;
+} t_link_array, *p_link_array;
 
 typedef struct {
     int *neighbors;
@@ -25,13 +25,5 @@ int *create_array_vertex_to_class(int vertex_count, const t_partition *P);
 
 void list_class_links(int vertex_count, Vertex *graph, int *vertex_to_class, t_link_array *class_links);
 void removeTransitiveLinks(t_link_array *p_link_array);
-
-/**
- * @brief Creates a link array from the given partition and graph.
- *
- * @param part The partition of the graph.
- * @param graph The adjacency list representation of the graph.
- * @return The created link array.
- */
 
 #endif

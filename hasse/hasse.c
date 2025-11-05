@@ -57,12 +57,12 @@ void list_class_links(int vertex_count, Vertex *graph, int *vertex_to_class, t_l
 void removeTransitiveLinks(t_link_array *p_link_array)
 {
     int i = 0;
-    while (i < p_link_array->log_size)
+    while (i < p_link_array->size)
     {
         t_link link1 = p_link_array->links[i];
         int j = 0;
         int to_remove = 0;
-        while (j < p_link_array->log_size && !to_remove)
+        while (j < p_link_array->size && !to_remove)
         {
             if (j != i)
             {
@@ -71,7 +71,7 @@ void removeTransitiveLinks(t_link_array *p_link_array)
                 {
                     // look for a link from link2.to to link1.to
                     int k = 0;
-                    while (k < p_link_array->log_size && !to_remove)
+                    while (k < p_link_array->size && !to_remove)
                     {
                         if (k != j && k != i)
                         {
@@ -90,8 +90,8 @@ void removeTransitiveLinks(t_link_array *p_link_array)
         if (to_remove)
         {
             // remove link1 by replacing it with the last link
-            p_link_array->links[i] = p_link_array->links[p_link_array->log_size - 1];
-            p_link_array->log_size--;
+            p_link_array->links[i] = p_link_array->links[p_link_array->size - 1];
+            p_link_array->size--;
         }
         else
         {

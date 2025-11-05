@@ -39,6 +39,6 @@ t_partition *CreatePartition();
 void AddClassToPartition (p_partition p, p_class c);
 
 void Parcours (int ver, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p_partition part, int *index);
-p_partition Tarjan (t_adjacency_list graph);
+p_partition tarjan (t_adjacency_list graph);
 
 #endif //TARJAN_H
