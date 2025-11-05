@@ -26,7 +26,7 @@ typedef struct s_class {
     int size;
 }t_class, *p_class;
 
-t_class * CreateClass (char * name_of_class);
+t_class * CreateClass (const char * name_of_class);
 void AddVertexToClass (p_class c, int vertex_id);
 
 typedef struct s_partition {
