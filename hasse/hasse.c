@@ -1,4 +1,4 @@
-#include <malloc.h>
+// #include <malloc.h>
 #include "hasse.h"
 #include <stdio.h>
 #include <string.h>
@@ -21,38 +21,68 @@ void links_add(t_link_array *a, int start, int end) {
     a->links[a->size++] = (t_link){ start, end };
 }
 
-int *create_array_vertex_to_class(int vertex_count, const t_partition *P) {
-    int *map = (int*)malloc(vertex_count * sizeof *map);
-    if (!map) return NULL;
-    for (int v = 0; v < vertex_count; ++v) map[v] = -1;
+int *create_array_vertex_to_class(int vertex_count, const t_partition *partition) {
+    int *vertex_to_class = (int*)malloc(vertex_count * sizeof *vertex_to_class);
+    if (!vertex_to_class) return NULL;
 
+    for (int vertex = 0; vertex < vertex_count; ++vertex)
+        vertex_to_class[vertex] = -1;
+
+    for (int class_index = 0; class_index < partition->nb_class; ++class_index) {
+        const t_class *current_class = partition->classes[class_index];
+
+        for (int i = 0; i < current_class->nb_vertices; ++i) {
+            int vertex_id_1based = current_class->vertices[i];
+            int vertex_index = vertex_id_1based - 1;
+
+            if (vertex_index >= 0 && vertex_index < vertex_count)
+                vertex_to_class[vertex_index] = class_index;
+        }
+    }
+
+    return vertex_to_class;
+}
+
+void list_class_links(const t_adjacency_list *graph, const int *vertex_to_class, t_link_array *class_links)
+{
+    for (int source_vertex = 0; source_vertex < graph->size; ++source_vertex) {
+        int source_class = vertex_to_class[source_vertex];
+
+        p_cell neighbor_cell = graph->array[source_vertex].head;
+        while (neighbor_cell != NULL) {
+            int neighbor_id_1based = neighbor_cell->arrival;
+            int neighbor_index = neighbor_id_1based - 1;
+
+            if (neighbor_index >= 0 && neighbor_index < graph->size) {
+                int destination_class = vertex_to_class[neighbor_index];
+
+                if (source_class != destination_class) {
+                    links_add(class_links, source_class, destination_class);
+                }
+            }
+
+            neighbor_cell = neighbor_cell->next;
+        }
+    }
+}
+
+void print_hasse_mermaid(const t_partition *P, const t_link_array *L)
+{
+    printf("flowchart TD\n");
     for (int c = 0; c < P->nb_class; ++c) {
         const t_class *cls = P->classes[c];
+        printf("  C%d[\"", c+1);
         for (int k = 0; k < cls->nb_vertices; ++k) {
-            int v_id_1based = cls->vertices[k]; // ex: 1..N
-            int v_index = v_id_1based - 1;      // -> 0..N-1
-            if (0 <= v_index && v_index < vertex_count)
-                map[v_index] = c;
+            if (k) printf(", ");
+            printf("%d", cls->vertices[k]);
         }
+        printf("\"]\n");
     }
-    return map;
-}
-
-void list_class_links(int vertex_count, Vertex *graph, int *vertex_to_class, t_link_array *class_links)
-{
-    for (int vertex = 0; vertex < vertex_count; vertex++) {
-        int class_from = vertex_to_class[vertex];
-
-        for (int n = 0; n < graph[vertex].neighbor_count; n++) {
-            int neighbor = graph[vertex].neighbors[n];
-            int class_to = vertex_to_class[neighbor];
-
-            if (class_from != class_to) {
-                links_add(class_links, class_from, class_to);
-            }
-        }
+    for (int i = 0; i < L->size; ++i) {
+        printf("  C%d --> C%d\n", L->links[i].start + 1, L->links[i].end + 1);
     }
 }
+
 
 void removeTransitiveLinks(t_link_array *p_link_array)
 {

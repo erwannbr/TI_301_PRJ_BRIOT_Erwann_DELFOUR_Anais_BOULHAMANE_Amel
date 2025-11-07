@@ -13,17 +13,12 @@ typedef struct {
     int length;
 } t_link_array, *p_link_array;
 
-typedef struct {
-    int *neighbors;
-    int neighbor_count;
-} Vertex;
+int *create_array_vertex_to_class(int vertex_count, const t_partition *P);
+void list_class_links(const t_adjacency_list *G, const int *vertex_to_class, t_link_array *class_links);
+
+void print_hasse_mermaid(const t_partition *P, const t_link_array *L);
 
 void links_init(t_link_array *a);
 void links_add(t_link_array *a, int start, int end);
-
-int *create_array_vertex_to_class(int vertex_count, const t_partition *P);
-
-void list_class_links(int vertex_count, Vertex *graph, int *vertex_to_class, t_link_array *class_links);
-void removeTransitiveLinks(t_link_array *p_link_array);
 
 #endif
