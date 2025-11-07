@@ -21,4 +21,6 @@ void print_hasse_mermaid(const t_partition *P, const t_link_array *L);
 void links_init(t_link_array *a);
 void links_add(t_link_array *a, int start, int end);
 
+void removeTransitiveLinks(t_link_array *);
+
 #endif

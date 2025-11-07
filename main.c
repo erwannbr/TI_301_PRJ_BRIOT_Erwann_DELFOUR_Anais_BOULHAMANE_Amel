@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "adjacency_list/adjacency_list.h"
+#include "hasse/hasse.h"
 #include "utils/utils.h"
 #include "tarjan/tarjan.h"
-
 
 int main() {
     t_adjacency_list exemple1 = readGraph("DATA/exemple1.txt");
@@ -34,8 +35,40 @@ int main() {
     }
     printf("\n");
 
-    printf("Part 2: step 1 validation :\n");
+    printf("Part 2: step 2 validation :\n");
+
+    int *vertex_to_class = create_array_vertex_to_class(
+        example_valid_step3.size, partition);
+    //initialize
+    t_link_array class_links;
+    links_init(&class_links);
+
+    list_class_links(&example_valid_step3, vertex_to_class, &class_links);
+
+    printf("Links between classes:\n");
+    for (int i = 0; i < class_links.size; i++) {
+        printf("  %s --> %s\n",
+               partition->classes[class_links.links[i].start]->name,
+               partition->classes[class_links.links[i].end]->name);
+    }
+    printf("\n");
+
+    removeTransitiveLinks(&class_links);
+
+    printf("Links after removing transitive ones:\n");
+    for (int i = 0; i < class_links.size; i++) {
+        printf("  %s --> %s\n",
+               partition->classes[class_links.links[i].start]->name,
+               partition->classes[class_links.links[i].end]->name);
+    }
+    printf("\n");
+
+    //export
+    printf("Hasse diagram (Mermaid format):\n");
+    print_hasse_mermaid(partition, &class_links);
+    printf("\n");
 
 
     return 0;
 }
+
