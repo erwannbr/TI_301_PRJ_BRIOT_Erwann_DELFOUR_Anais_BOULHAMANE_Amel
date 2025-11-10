@@ -70,5 +70,6 @@ int pop(t_stack *s);
 int isEmpty(t_stack *s);
 
 void print_class(p_partition ,  t_link_array);
+void print_component(p_partition);
 
 #endif

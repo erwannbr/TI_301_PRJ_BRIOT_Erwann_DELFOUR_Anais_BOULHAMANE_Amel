@@ -228,3 +228,16 @@ void print_class(p_partition partition,  t_link_array class_links) {
     }
     printf("\n");
 }
+
+void print_component(p_partition partition) {
+    for (int i = 0; i < partition->nb_class; i++) {
+        p_class c = partition->classes[i];
+        printf("Component %s: {", c->name);
+        for (int j = 0; j < c->nb_vertices; j++) {
+            printf("%d", c->vertices[j]);
+            if (j < c->nb_vertices - 1) printf(",");
+        }
+        printf("}\n");
+    }
+    printf("\n");
+}

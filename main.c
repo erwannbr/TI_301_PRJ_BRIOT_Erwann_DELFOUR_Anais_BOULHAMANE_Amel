@@ -28,27 +28,18 @@ int main() {
 
     printf("Part 2: step 1 validation :\n");
     p_partition partition = tarjan(example_valid_step3);
-
-    for (int i = 0; i < partition->nb_class; i++) {
-        p_class c = partition->classes[i];
-        printf("Component %s: {", c->name);
-        for (int j = 0; j < c->nb_vertices; j++) {
-            printf("%d", c->vertices[j]);
-            if (j < c->nb_vertices - 1) printf(",");
-        }
-        printf("}\n");
-    }
-    printf("\n");
+    print_component(partition);
 
 
     printf("Part 2: step 2 validation :\n");
-    int *vertex_to_class = create_array_vertex_to_class(
-        example_valid_step3.size, partition);
-
+    int *vertex_to_class = create_array_vertex_to_class(example_valid_step3.size, partition);
     t_link_array class_links;
     links_init(&class_links);
 
     list_class_links(&example_valid_step3, vertex_to_class, &class_links);
+
+    //possibility to print the classes
+    //print_class(partition, class_links);
 
     printf("Hasse diagram (Mermaid format):\n");
     print_hasse_mermaid(partition, &class_links);
@@ -74,4 +65,3 @@ int main() {
 
     return 0;
 }
-
