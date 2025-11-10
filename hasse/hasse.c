@@ -1,4 +1,4 @@
-// #include <malloc.h>
+#include <malloc.h>
 #include "hasse.h"
 #include <stdio.h>
 #include <string.h>
@@ -129,4 +129,120 @@ void removeTransitiveLinks(t_link_array *p_link_array)
             i++;
         }
     }
+}
+
+int is_class_transient(int class_id, t_link_array *class_links) {
+    for (int i = 0; i < class_links->size; i++) {
+        if (class_links->links[i].start == class_id &&
+            class_links->links[i].end != class_id) {
+            return 1;
+            }
+    }
+    return 0;
+}
+
+int is_class_persistent(int class_id, t_link_array *class_links) {
+    if (is_class_transient(class_id, class_links) == 1) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int is_state_absorbing(int class_id, t_partition *partition, t_link_array *class_links) {
+    if (is_class_transient(class_id, class_links)) {
+        return 0;
+    }
+
+    if (partition->classes[class_id]->nb_vertices == 1) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int is_graph_irreducible(t_partition *partition) {
+    if (partition == NULL) {
+        printf("Error: NULL partition provided\n");
+        return 0;
+    }
+
+    const int number_of_classes = partition->nb_class;
+
+    if (number_of_classes == 1) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/**
+ * Display all graph characteristics with class numbers
+ */
+void display_graph_characteristics(t_partition *partition, t_link_array *class_links) {
+    printf("For classes:\n");
+    for (int i = 0; i < partition->nb_class; i++) {
+        t_class *current_class = partition->classes[i];
+
+        // Display class number and name
+        printf("  Class %s (Class #%d) {", current_class->name, i + 1);
+        for (int j = 0; j < current_class->nb_vertices; j++) {
+            if (j > 0) printf(", ");
+            printf("%d", current_class->vertices[j]);
+        }
+        printf("}: ");
+
+        if (is_class_transient(i, class_links)) {
+            printf("transient\n");
+        } else {
+            printf("persistent\n");
+        }
+    }
+
+    // Display state characteristics
+    printf("\nFor states (transient or absorbing):\n");
+    for (int i = 0; i < partition->nb_class; i++) {
+        t_class *current_class = partition->classes[i];
+
+        for (int j = 0; j < current_class->nb_vertices; j++) {
+            int vertex = current_class->vertices[j];
+            printf("  State %d (in %s, Class #%d): ", vertex, current_class->name, i + 1);
+
+            if (is_class_transient(i, class_links)) {
+                printf("transient\n");
+            } else {
+                printf("persistent");
+                if (is_state_absorbing(i, partition, class_links)) {
+                    printf(", absorbing\n");
+                } else {
+                    printf("\n");
+                }
+            }
+        }
+    }
+
+    // Display absorbing states
+    printf("\nFor states (absorbing):\n");
+    int has_absorbing = 0;
+    for (int i = 0; i < partition->nb_class; i++) {
+        if (is_state_absorbing(i, partition, class_links)) {
+            t_class *current_class = partition->classes[i];
+            printf("  State %d (in %s, Class #%d) is absorbing\n",
+                   current_class->vertices[0], current_class->name, i + 1);
+            has_absorbing = 1;
+        }
+    }
+    if (!has_absorbing) {
+        printf("  No absorbing states\n");
+    }
+
+    // Display graph irreducibility
+    printf("\nIs the graph reductible:\n");
+    if (is_graph_irreducible(partition)) {
+        printf("  The Markov graph is irreducible\n");
+    } else {
+        printf("  The Markov graph is reducible\n");
+    }
+
+    printf("\n");
 }

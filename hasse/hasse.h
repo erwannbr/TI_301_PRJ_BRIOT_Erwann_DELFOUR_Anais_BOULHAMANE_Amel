@@ -23,4 +23,10 @@ void links_add(t_link_array *a, int start, int end);
 
 void removeTransitiveLinks(t_link_array *);
 
+int is_class_transient(int, t_link_array *);
+int is_class_persistent(int, t_link_array *);
+int is_state_absorbing(int , t_partition *, t_link_array *);
+int is_graph_irreducible(t_partition *partition);
+void display_graph_characteristics(t_partition *, t_link_array *);
+
 #endif
