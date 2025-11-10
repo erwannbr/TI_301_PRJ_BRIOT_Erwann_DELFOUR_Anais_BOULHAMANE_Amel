@@ -1,11 +1,3 @@
-//
-// Created by anais on 10/11/2025.
-//
-//
-// Created by anais on 20/10/2025.
-//
-
-
 #include "matrix.h"
 #include "../cell/cell.h"
 #include "../utils/utils.h"
@@ -93,7 +85,7 @@ float DiffMatrix(p_matrix M, p_matrix N) {
     return somme;
 }
 void printMatrix(p_matrix M) {
-    int n = M->size;//
+    int n = M->size;
     for (int i = 0; i<n ; i++) {
         printf("[");
         for (int j = 0; j<n ; j++) {
@@ -101,4 +93,25 @@ void printMatrix(p_matrix M) {
         }
         printf("]\n");
     }
+}
+
+p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {
+    if (M == NULL) return NULL;
+    if (compo_index < 0 || compo_index >= part.nb_class) return NULL;
+
+    t_class *classe = part.classes[compo_index];
+    int n = classe->nb_vertices;
+    if (n <= 0) return NULL;
+
+    p_matrix sub = CreateEmptyMatrix(n);
+
+    for (int i = 0; i < n; i++) {
+        int row = classe->vertices[i] - 1;
+        for (int j = 0; j < n; j++) {
+            int col = classe->vertices[j] - 1;
+            sub->data[i][j] = M->data[row][col];
+        }
+    }
+
+    return sub;
 }
