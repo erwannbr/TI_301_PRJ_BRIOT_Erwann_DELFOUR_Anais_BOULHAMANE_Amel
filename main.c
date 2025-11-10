@@ -62,17 +62,19 @@ int main() {
     printf("Part 3: step 1 validation:\n");
     t_adjacency_list graph_meteo = readGraph("DATA/example_meteo.txt");
     p_matrix  Meteo = CreateMatFromAdjList(graph_meteo);
+    printf ("Meteo Matrix");
     printMatrix(Meteo);
     for (int i = 0; i<2 ; i++) {
         Meteo = MultiplyMatrices(Meteo, Meteo);
     }
-    printf("Meteo Matrix Power 7");
+    printf("Meteo Matrix Power 3\n");
     printMatrix(Meteo);
     for (int j=0; j<4; j++) {
         Meteo = MultiplyMatrices(Meteo, Meteo);
     }
-    printf("Meteo Matrix Power 7");
+    printf("Meteo Matrix Power 7\n");
     printMatrix(Meteo);
+
 
     return 0;
 }
