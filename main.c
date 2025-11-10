@@ -66,10 +66,12 @@ int main() {
     for (int i = 0; i<2 ; i++) {
         Meteo = MultiplyMatrices(Meteo, Meteo);
     }
+    printf("Meteo Matrix Power 7");
     printMatrix(Meteo);
     for (int j=0; j<4; j++) {
         Meteo = MultiplyMatrices(Meteo, Meteo);
     }
+    printf("Meteo Matrix Power 7");
     printMatrix(Meteo);
 
     return 0;
