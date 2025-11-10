@@ -1,4 +1,3 @@
-#include <malloc.h>
 #include "hasse.h"
 #include <stdio.h>
 #include <string.h>
