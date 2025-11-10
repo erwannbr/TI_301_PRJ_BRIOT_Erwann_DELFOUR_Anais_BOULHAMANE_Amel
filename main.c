@@ -4,6 +4,7 @@
 #include "hasse/hasse.h"
 #include "utils/utils.h"
 #include "tarjan/tarjan.h"
+#include "matrix/matrix.h"
 
 int main() {
     t_adjacency_list exemple1 = readGraph("DATA/exemple1.txt");
@@ -75,6 +76,9 @@ int main() {
 
     printf("Part 2: step 2 validation :\n");
     display_graph_characteristics(partition, &class_links);
+
+    printf("Part 3: step 1 validation:");
+
 
     return 0;
 }
