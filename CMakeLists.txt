@@ -8,4 +8,5 @@ add_executable(TI_301_PJT
         cell/cell.c list/list.c
         adjacency_list/adjacency_list.c
         tarjan/tarjan.c
-        hasse/hasse.c)
+        hasse/hasse.c
+        matrix/matrix.c)

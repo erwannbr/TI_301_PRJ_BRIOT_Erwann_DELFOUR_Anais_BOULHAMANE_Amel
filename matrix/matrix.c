@@ -89,10 +89,12 @@ void printMatrix(p_matrix M) {
     for (int i = 0; i<n ; i++) {
         printf("[");
         for (int j = 0; j<n ; j++) {
-            printf("%d  ",M[i][j]);
+            printf("%.2f  ",M->data[i][j]);
         }
         printf("]\n");
     }
+    printf("\n");
+    printf("\n");
 }
 
 p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {

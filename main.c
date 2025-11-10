@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "adjacency_list/adjacency_list.h"
 #include "hasse/hasse.h"
 #include "utils/utils.h"
@@ -57,8 +58,20 @@ int main() {
     printf("Part 2: step 3 validation :\n");
     display_graph_characteristics(partition, &class_links);
 
-    printf("Part 3: step 1 validation:");
 
+    printf("Part 3: step 1 validation:\n");
+    t_adjacency_list graph_meteo = readGraph("DATA/example_meteo.txt");
+    p_matrix  Meteo = CreateMatFromAdjList(graph_meteo);
+    printMatrix(Meteo);
+    for (int i = 0; i<2 ; i++) {
+        Meteo = MultiplyMatrices(Meteo, Meteo);
+    }
+    printMatrix(Meteo);
+    for (int j=0; j<4; j++) {
+        Meteo = MultiplyMatrices(Meteo, Meteo);
+    }
+    printMatrix(Meteo);
 
     return 0;
 }
+
