@@ -35,14 +35,12 @@ int main() {
     int *vertex_to_class = create_array_vertex_to_class(example_valid_step3.size, partition);
     t_link_array class_links;
     links_init(&class_links);
-
     list_class_links(&example_valid_step3, vertex_to_class, &class_links);
-
     //possibility to print the classes
     //print_class(partition, class_links);
 
     printf("Hasse diagram (Mermaid format):\n");
-    print_hasse_mermaid(partition, &class_links);
+    print_hasse_mermaid(partition, &class_links,"DATA/mermaid-file-part2.mmd");
     printf("\n");
 
 

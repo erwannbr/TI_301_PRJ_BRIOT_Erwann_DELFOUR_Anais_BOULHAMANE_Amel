@@ -65,23 +65,38 @@ void list_class_links(const t_adjacency_list *graph, const int *vertex_to_class,
     }
 }
 
-void print_hasse_mermaid(const t_partition *P, const t_link_array *L)
+void print_hasse_mermaid(const t_partition *P, const t_link_array *L, const char *filename)
 {
-    printf("flowchart TD\n");
+    FILE *file = fopen(filename, "wt");
+    if (file == NULL) {
+        perror("Could not open file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(file, "---\n");
+    fprintf(file, "config:\n");
+    fprintf(file, "   layout: elk\n");
+    fprintf(file, "   theme: neo\n");
+    fprintf(file, "   look: neo\n");
+    fprintf(file, "---\n\n");
+
+    fprintf(file,"flowchart TD\n");
     for (int c = 0; c < P->nb_class; ++c) {
         const t_class *cls = P->classes[c];
-        printf("  C%d[\"", c+1);
+        fprintf(file,"  C%d[\"", c+1);
         for (int k = 0; k < cls->nb_vertices; ++k) {
             if (k) printf(", ");
-            printf("%d", cls->vertices[k]);
+            fprintf(file,"%d", cls->vertices[k]);
         }
-        printf("\"]\n");
+        fprintf(file, "\"]\n");
     }
     for (int i = 0; i < L->size; ++i) {
-        printf("  C%d --> C%d\n", L->links[i].start + 1, L->links[i].end + 1);
+        fprintf(file,"  C%d --> C%d\n", L->links[i].start + 1, L->links[i].end + 1);
     }
-}
 
+    fclose(file);
+    printf("Mermaid file '%s' generated successfully.\n", filename);
+}
 
 void removeTransitiveLinks(t_link_array *p_link_array)
 {
@@ -183,7 +198,6 @@ void display_graph_characteristics(t_partition *partition, t_link_array *class_l
     for (int i = 0; i < partition->nb_class; i++) {
         t_class *current_class = partition->classes[i];
 
-        // Display class number and name
         printf("  Class %s (Class #%d) {", current_class->name, i + 1);
         for (int j = 0; j < current_class->nb_vertices; j++) {
             if (j > 0) printf(", ");
@@ -198,7 +212,6 @@ void display_graph_characteristics(t_partition *partition, t_link_array *class_l
         }
     }
 
-    // Display state characteristics
     printf("\nFor states (transient or absorbing):\n");
     for (int i = 0; i < partition->nb_class; i++) {
         t_class *current_class = partition->classes[i];
@@ -220,7 +233,6 @@ void display_graph_characteristics(t_partition *partition, t_link_array *class_l
         }
     }
 
-    // Display absorbing states
     printf("\nFor states (absorbing):\n");
     int has_absorbing = 0;
     for (int i = 0; i < partition->nb_class; i++) {
@@ -235,7 +247,6 @@ void display_graph_characteristics(t_partition *partition, t_link_array *class_l
         printf("  No absorbing states\n");
     }
 
-    // Display graph irreducibility
     printf("\nIs the graph reductible:\n");
     if (is_graph_irreducible(partition)) {
         printf("  The Markov graph is irreducible\n");
