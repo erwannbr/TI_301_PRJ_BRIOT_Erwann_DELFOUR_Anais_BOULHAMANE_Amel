@@ -93,7 +93,7 @@ float DiffMatrix(p_matrix M, p_matrix N) {
     return somme;
 }
 void printMatrix(p_matrix M) {
-    int n = M->size;
+    int n = M->size;//
     for (int i = 0; i<n ; i++) {
         printf("[");
         for (int j = 0; j<n ; j++) {
