@@ -3,6 +3,7 @@
 
 #include "../adjacency_list/adjacency_list.h"
 #include "../tarjan/tarjan.h"
+#include "../hasse/hasse.h"
 
 /**
  * @brief Reads graph from file
@@ -67,5 +68,7 @@ int pop(t_stack *s);
  * @return 1 if empty, 0 otherwise
  */
 int isEmpty(t_stack *s);
+
+void print_class(p_partition ,  t_link_array);
 
 #endif

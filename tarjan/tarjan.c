@@ -1,6 +1,3 @@
-//
-// Created by anais on 03/11/2025.
-//
 #include "tarjan.h"
 #include "../cell/cell.h"
 #include "../utils/utils.h"

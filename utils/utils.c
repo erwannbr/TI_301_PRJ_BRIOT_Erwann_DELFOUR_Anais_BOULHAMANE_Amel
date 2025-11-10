@@ -3,6 +3,8 @@
 
 #include "../utils/utils.h"
 #include "../adjacency_list/adjacency_list.h"
+#include "../hasse/hasse.h"
+#include "../tarjan/tarjan.h"
 
 /**
  * @brief Reads a graph from a file and creates its adjacency list
@@ -205,4 +207,24 @@ int pop (t_stack *s) {
  */
 int isEmpty (t_stack *s) {
     return (s->head == NULL);
+}
+
+void print_class(p_partition partition,  t_link_array class_links) {
+    printf("Links between classes:\n");
+    for (int i = 0; i < class_links.size; i++) {
+        printf("  %s --> %s\n",
+               partition->classes[class_links.links[i].start]->name,
+               partition->classes[class_links.links[i].end]->name);
+    }
+    printf("\n");
+
+    removeTransitiveLinks(&class_links);
+
+    printf("Links after removing transitive ones:\n");
+    for (int i = 0; i < class_links.size; i++) {
+        printf("  %s --> %s\n",
+               partition->classes[class_links.links[i].start]->name,
+               partition->classes[class_links.links[i].end]->name);
+    }
+    printf("\n");
 }
