@@ -6,6 +6,7 @@
 #include "../hasse/hasse.h"
 #include "../tarjan/tarjan.h"
 
+
 /**
  * @brief Reads a graph from a file and creates its adjacency list
  * @param filename Path to the file containing graph data
@@ -240,4 +241,40 @@ void print_component(p_partition partition) {
         printf("}\n");
     }
     printf("\n");
+}
+
+void PowerMatrix (p_matrix M, int power) {
+    for (int i=0; i<power-1; i++) {
+        M = MultiplyMatrices(M, M);
+    }
+    printf("Meteo Matrix Power %d\n", power);
+    printMatrix(M);
+}
+
+void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char *graph_name) {
+    p_matrix M = CreateMatFromAdjList(graph);
+    p_matrix MNext = MultiplyMatrices(M, M);
+    float diff = DiffMatrix(M, MNext);
+    int power = 1;
+
+    while (diff > epsilon && power < 100) {
+        power ++;
+        p_matrix tmp = MultiplyMatrices(MNext, M);
+        diff = DiffMatrix(MNext, tmp);
+
+        printf("For iteration %d, the difference is %.5f\n", power, diff);
+
+        free(M);
+        M = MNext;
+        MNext = tmp;
+
+    }
+    if (power > 100) printf ("For %s, this criterion does not work\n", graph_name);
+    else {
+        printf ("Convergence reached afeter %d multiplications (diff = %.5f)\n", power, diff);
+        printf("Stationary Matrix :\n");
+        printMatrix(MNext);
+    }
+    free(M);
+    free(MNext);
 }

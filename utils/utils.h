@@ -4,6 +4,7 @@
 #include "../adjacency_list/adjacency_list.h"
 #include "../tarjan/tarjan.h"
 #include "../hasse/hasse.h"
+#include "../matrix/matrix.h"
 
 /**
  * @brief Reads graph from file
@@ -71,5 +72,8 @@ int isEmpty(t_stack *s);
 
 void print_class(p_partition ,  t_link_array);
 void print_component(p_partition);
+
+void PowerMatrix (p_matrix M, int power);
+void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char *graph_name);
 
 #endif

@@ -8,7 +8,10 @@
 
 int main() {
     t_adjacency_list example1 = readGraph("DATA/exemple1.txt");
+    t_adjacency_list example2 = readGraph("DATA/exemple2.txt");
+    t_adjacency_list example3 = readGraph("DATA/exemple3.txt");
     t_adjacency_list example_valid_step3 = readGraph("DATA/exemple_valid_step3.txt");
+    t_adjacency_list graph_meteo = readGraph("DATA/example_meteo.txt");
 
 
     printf("Part 1: step 1 validation :\n");
@@ -49,21 +52,16 @@ int main() {
 
 
     printf("Part 3: step 1 validation:\n");
-    t_adjacency_list graph_meteo = readGraph("DATA/example_meteo.txt");
     p_matrix  Meteo = CreateMatFromAdjList(graph_meteo);
     printf ("Meteo Matrix");
     printMatrix(Meteo);
-    for (int i = 0; i<2 ; i++) {
-        Meteo = MultiplyMatrices(Meteo, Meteo);
-    }
-    printf("Meteo Matrix Power 3\n");
-    printMatrix(Meteo);
-    for (int j=0; j<4; j++) {
-        Meteo = MultiplyMatrices(Meteo, Meteo);
-    }
-    printf("Meteo Matrix Power 7\n");
-    printMatrix(Meteo);
-
+    PowerMatrix (Meteo, 3);
+    PowerMatrix (Meteo, 7);
+    float epsilon = 0.01;
+    ComputeStationaryMatrix (example1, epsilon, "Example 1");
+    ComputeStationaryMatrix (example2, epsilon, "Example 2");
+    ComputeStationaryMatrix (example3, epsilon, "Example 3");
 
     return 0;
 }
+
