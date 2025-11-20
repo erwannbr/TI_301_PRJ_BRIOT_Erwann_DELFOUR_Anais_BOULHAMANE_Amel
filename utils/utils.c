@@ -388,7 +388,7 @@ void step2_validation(t_adjacency_list graph) {
 
     p_partition P = tarjan(graph);
 
-    int *map = create_array_vertex_to_class(graph.size, P);
+    int *map = create_vertex_class_array(graph.size, P);
     t_link_array L;
     links_init(&L);
     list_class_links(&graph, map, &L);

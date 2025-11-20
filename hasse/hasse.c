@@ -42,29 +42,30 @@ void links_add(t_link_array *a, int start, int end) {
  * @param partition Pointer to the partition structure
  * @return Newly allocated array of size vertex_count, NULL on error
  */
-int *create_array_vertex_to_class(int vertex_count, const t_partition *partition) {
-    int *vertex_to_class = (int*)malloc(vertex_count * sizeof *vertex_to_class);
-    if (!vertex_to_class) return NULL;
+int *create_vertex_class_array(int vertex_count, const t_partition *partition) {
+    // vertex_class[v] will store the index of the class that vertex v belongs to.
+    int *vertex_class = (int*)malloc(vertex_count * sizeof *vertex_class);
+    if (!vertex_class) return NULL;
 
-    // Initialize all vertices as "unassigned"
+    // Here, -1 means: this vertex has not been assigned to any class yet.
     for (int vertex = 0; vertex < vertex_count; ++vertex)
-        vertex_to_class[vertex] = -1;
+        vertex_class[vertex] = -1;
 
-    // Assign class index to each vertex in each class
+    // for each class in the partition
     for (int class_index = 0; class_index < partition->nb_class; ++class_index) {
-        const t_class *current_class = partition->classes[class_index];
-
-        for (int i = 0; i < current_class->nb_vertices; ++i) {
-            int vertex_id_1based = current_class->vertices[i];
-            int vertex_index = vertex_id_1based - 1;
-
+        // Get a pointer to the current class
+        t_class *cls = partition->classes[class_index];
+        // First loop over the vertices of this class
+        for (int i = 0; i < cls->nb_vertices; ++i) {
+            int vertex_id = cls->vertices[i];   // Vertex ID in the graph
+            int vertex_index = vertex_id - 1;
             if (vertex_index >= 0 && vertex_index < vertex_count)
-                vertex_to_class[vertex_index] = class_index;
+                vertex_class[vertex_index] = class_index;
         }
     }
-
-    return vertex_to_class;
+    return vertex_class;
 }
+
 
 /**
  * @brief Computes class‑to‑class links from a vertex adjacency list.

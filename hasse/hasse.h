@@ -34,7 +34,7 @@ typedef struct {
  * @param P Pointer to the partition (result of Tarjan or other SCC algorithm)
  * @return Pointer to an array of size vertex_count, or NULL on allocation error
  */
-int *create_array_vertex_to_class(int vertex_count, const t_partition *P);
+int *create_vertex_class_array(int vertex_count, const t_partition *P);
 
 /**
  * @brief Computes the directed links between classes based on adjacency data.

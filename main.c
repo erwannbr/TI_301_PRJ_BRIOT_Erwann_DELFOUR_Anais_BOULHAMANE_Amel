@@ -41,7 +41,7 @@ int main() {
 
 
     printf("Part 2: step 2 validation :\n");
-    int *vertex_to_class = create_array_vertex_to_class(example_valid_step3.size, partition);
+    int *vertex_to_class = create_vertex_class_array(example_valid_step3.size, partition);
     t_link_array class_links;
     links_init(&class_links);
     list_class_links(&example_valid_step3, vertex_to_class, &class_links);
