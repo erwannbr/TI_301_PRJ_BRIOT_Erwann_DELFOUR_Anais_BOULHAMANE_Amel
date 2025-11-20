@@ -76,4 +76,9 @@ void print_component(p_partition);
 void PowerMatrix (p_matrix M, int power);
 void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char *graph_name);
 
+p_matrix CreateIdentityMatrix(int);
+p_matrix MixMatrices(p_matrix, p_matrix, float );
+void SolveStationaryDistribution(p_matrix M, int);
+void periodicity(t_adjacency_list);
+
 #endif
