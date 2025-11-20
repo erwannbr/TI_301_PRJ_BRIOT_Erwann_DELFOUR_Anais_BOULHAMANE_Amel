@@ -16,29 +16,34 @@
  * @note Exits program on file error
  */
 t_adjacency_list readGraph(const char *filename) {
+    // open the file in text mode for reading ("rt")
     FILE *file = fopen(filename, "rt");
     if (!file) {
+        // if the file could not be opened, print an error message and stop the program
         perror("Could not open file for reading");
         exit(EXIT_FAILURE);
     }
 
     int nb_vertices, start, end;
     float proba;
-
+    // read the number of vertices (first integer in the file)
     if (fscanf(file, "%d", &nb_vertices) != 1) {
+        // if we cannot read it, print an error and exit
         perror("Could not read number of vertices");
         fclose(file);
         exit(EXIT_FAILURE);
     }
-
+    // create an empty adjacency list with nb_vertices vertices
     t_adjacency_list *gp = empty_adjacency_list(nb_vertices);
-
+    // read each line: start vertex, end vertex, and probability
+    // Continue while fscanf successfully reads 3 values
     while (fscanf(file, "%d %d %f", &start, &end, &proba) == 3) {
+        // add an edge from 'start' to 'end' with probability 'proba'
+        // we use start - 1 because array indices go from 0 to nb_vertices - 1
         addCellToList(&gp->array[start - 1], end, proba);
     }
 
     fclose(file);
-
     t_adjacency_list g = *gp;
     free(gp);
     return g;
@@ -85,32 +90,37 @@ static char *getID(int i)
  * @note Verifies that outgoing probabilities from each vertex sum to 1.0
  * @note Tolerance: ±0.01 for floating-point comparison
  */
-void checkIfMarkov(t_adjacency_list list) {
-    int is_markov = 1;
 
+void checkIfMarkov(t_adjacency_list list) {
+    int is_markov = 1; // it indicates if the graph satisfies the Markov property
+
+    // loop through each vertex in the graph
     for (int i = 0; i < list.size; i++) {
         float total_proba = 0;
-        t_std_list current_list = list.array[i];
-        t_cell * p_current_cell = current_list.head;
+        t_cell *curr = list.array[i].head;
 
-        while (p_current_cell != NULL) {
-            total_proba += p_current_cell->probability;
-            p_current_cell = p_current_cell->next;
+        // sum all probabilities for the current vertex
+        while (curr != NULL) {
+            total_proba += curr->probability;
+            curr = curr->next;
         }
 
-        // Check if this node's probabilities sum to 1
-        if (total_proba < 0.99 || total_proba > 1.01) {
+        // sum all outgoing probabilities for the current vertex
+        if (total_proba < 0.99f || total_proba > 1.01f) {
             is_markov = 0;
-            break;
+
+            // print detailed error
+            printf( "Vertex %d does not respect the Markov property: sum is %.2f\n", i + 1, total_proba );
+            break; // stop at the first error
         }
     }
-
     if (is_markov) {
         printf("The graph is a Markov graph\n");
     } else {
         printf("The graph is not a Markov graph\n");
     }
 }
+
 
 
 /**
@@ -123,10 +133,12 @@ void checkIfMarkov(t_adjacency_list list) {
 void exportToMermaid(t_adjacency_list graph, const char *filename) {
     FILE *file = fopen(filename, "wt");
     if (file == NULL) {
-        perror("Could not open file for writing");
-        exit(EXIT_FAILURE);
+        printf("Error: cannot open file '%s'\n", filename);
+        return;    // failure
     }
 
+    // write the Mermaid configuration header.
+    // these settings control the appearance of the graph in MermaidChart.
     fprintf(file, "---\n");
     fprintf(file, "config:\n");
     fprintf(file, "   layout: elk\n");
@@ -134,20 +146,25 @@ void exportToMermaid(t_adjacency_list graph, const char *filename) {
     fprintf(file, "   look: neo\n");
     fprintf(file, "---\n\n");
 
+    // start a flowchart that goes from left to right.
     fprintf(file, "flowchart LR\n");
 
-
+    // write each vertex definition.
+    // example: A((1)), B((2)), C((3)), etc.
+    // getID(i + 1) converts 1 → A, 2 → B, ..., 27 → AA.
     for (int i = 0; i < graph.size; i++) {
         fprintf(file, "%s((%d))\n", getID(i + 1), i + 1);
     }
     fprintf(file, "\n");
-
-
+    // write all edges based on the adjacency list.
+    // for each vertex i, traverse its linked list of outgoing edges.
     for (int i = 0; i < graph.size; i++) {
         t_cell *current = graph.array[i].head;
+        // for every outgoing edge: print
+        // source -->|proba| destination
         while (current != NULL) {
-            fprintf(file, "%s -->|%.2f|%s\n",getID(i + 1), current->probability,  getID(current->arrival));
-            current = current->next;
+            fprintf(file, "%s -->|%.2f|%s\n",getID(i + 1), current->probability,  getID(current->arrival)); // Convert source vertex index to letter,Display probability,Convert destination vertex number to letter
+            current = current->next; // Move to the next outgoing edge
         }
     }
 

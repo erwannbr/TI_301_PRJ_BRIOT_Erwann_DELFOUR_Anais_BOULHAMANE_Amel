@@ -7,7 +7,7 @@
  * @brief Standard linked list structure
  */
 typedef struct s_std_list{
-    t_cell *head;
+    t_cell *head; // pointer to the first cell of the list
 }t_std_list;
 
 /**

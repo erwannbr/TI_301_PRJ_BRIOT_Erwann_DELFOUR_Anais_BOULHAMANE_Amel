@@ -7,7 +7,7 @@
  */
 t_std_list createEmptyList(void) {
     t_std_list list;
-    list.head = NULL;
+    list.head = NULL; // initialize the head pointer to NULL, this means the list contains no edges yet
     return list;
 }
 
@@ -23,11 +23,13 @@ void DisplayList (t_std_list list) {
     if (curr==NULL) {
         return;
     }
+    // traverse the list until the second-to-last element
+    // for each cell, print its arrival vertex and probability
     while (curr->next != NULL) {
         printf ("(%d, %.2f) @-> ", curr->arrival,curr->probability);
         curr=curr->next;
     }
-    
+    // print the last cell (without the arrow)
     printf ("(%d, %.2f)" , curr->arrival,curr->probability);
 
     return;

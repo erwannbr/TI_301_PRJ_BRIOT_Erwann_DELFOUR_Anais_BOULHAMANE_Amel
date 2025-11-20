@@ -5,9 +5,9 @@
  * @brief Cell for graph adjacency list
  */
 typedef struct s_cell {
-    int arrival;
-    float probability;
-    struct s_cell *next;
+    int arrival; // destination vertex
+    float probability; // probability for this edge
+    struct s_cell *next; // pointer to the next cell in the linked list
 }t_cell, *p_cell;
 
 /**
