@@ -143,7 +143,7 @@ p_partition tarjan (t_adjacency_list graph) {
         printf("Stack creation failed\n");
         return NULL;
     }
-
+    //
     // Create an empty partition that will store all strongly connected components (classes)
     p_partition part = CreatePartition();
     // Global index used for Tarjan numbering (DFS index)
