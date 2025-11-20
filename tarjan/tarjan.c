@@ -88,7 +88,7 @@ void AddClassToPartition (p_partition p, p_class c) {
 }
 
 void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p_partition part, int *index) {
-    if (!Ver || !S || !part || !index) return;
+    if (Ver == NULL  || S == NULL || part == NULL || index == NULL) return;
     Ver[v].class_nb = *index;
     Ver[v].link_nb = *index;
     (*index)++;
@@ -132,7 +132,7 @@ p_partition tarjan (t_adjacency_list graph) {
     if (!S) {
         free(Ver);
         printf("Stack creation failed\n");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     p_partition part = CreatePartition();
     int index = 0;
