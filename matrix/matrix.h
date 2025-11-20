@@ -28,4 +28,6 @@ void DestroyMatrix(p_matrix M);
 int gcd(int *vals, int nbvals);
 int getPeriod(p_matrix sub_matrix);
 
+
+float *StationaryVectorFromSubmatrix(p_matrix S, int max_iter, float eps);
 #endif //MATRIX_H

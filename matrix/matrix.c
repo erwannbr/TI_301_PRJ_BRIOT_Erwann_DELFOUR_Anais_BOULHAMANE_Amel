@@ -118,6 +118,58 @@ p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {
     return sub;
 }
 
+float *StationaryVectorFromSubmatrix(p_matrix S, int max_iter, float eps) {
+    if (!S || S->size <= 0 || max_iter <= 0 || eps <= 0.0f) return NULL;
+    int n = S->size;
+
+    if (n == 1) {
+        float *pi = (float*)malloc(sizeof(float));
+        if (!pi) return NULL;
+        pi[0] = 1.0f;
+        return pi;
+    }
+
+    float *pi  = (float*)malloc(n * sizeof(float));
+    float *pi2 = (float*)malloc(n * sizeof(float));
+    if (!pi || !pi2) { free(pi); free(pi2); return NULL; }
+
+    /* init uniforme */
+    for (int j = 0; j < n; ++j) pi[j] = 1.0f / (float)n;
+
+    for (int it = 0; it < max_iter; ++it) {
+        /* pi2 = pi * S */
+        for (int j = 0; j < n; ++j) pi2[j] = 0.0f;
+        for (int k = 0; k < n; ++k) {
+            float pik = pi[k];
+            if (pik == 0.0f) continue;
+            for (int j = 0; j < n; ++j) {
+                pi2[j] += pik * S->data[k][j];
+            }
+        }
+
+        /* normalisation */
+        float sum = 0.0f;
+        for (int j = 0; j < n; ++j) { if (pi2[j] < 0.0f) pi2[j] = 0.0f; sum += pi2[j]; }
+        if (sum > 0.0f) for (int j = 0; j < n; ++j) pi2[j] /= sum;
+
+        /* test convergence L1 */
+        float diff = 0.0f;
+        for (int j = 0; j < n; ++j) {
+            float d = pi2[j] - pi[j];
+            if (d < 0) d = -d;
+            diff += d;
+        }
+
+        /* copie pi2 -> pi */
+        for (int j = 0; j < n; ++j) pi[j] = pi2[j];
+
+        if (diff < eps) break;
+    }
+
+    free(pi2);
+    return pi;   /* à free par l’appelant */
+}
+
 void DestroyMatrix(p_matrix M) {
     if (M == NULL) {
         return;
