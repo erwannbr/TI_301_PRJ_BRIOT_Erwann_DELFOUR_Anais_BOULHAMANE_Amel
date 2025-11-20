@@ -11,10 +11,10 @@ typedef struct s_stack t_stack;
 
 
 typedef struct s_tarjan_vertex {
-    int id;
-    int class_nb;
-    int link_nb;
-    int in_stack;
+    int id; // identifier: the vertex number in the graph (1, 2, 3, ...)
+    int class_nb; // temporary visit order
+    int link_nb; // lowest reachable index from this vertex
+    int in_stack; // boolean flag: 1 if the vertex is currently on the Tarjan stack, 0 otherwise
 } t_tarjan_vertex, *p_tarjan_vertex;
 
 t_tarjan_vertex * CreateArr (int n);

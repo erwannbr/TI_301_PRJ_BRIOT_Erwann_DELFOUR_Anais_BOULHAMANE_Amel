@@ -6,16 +6,19 @@
 #include <string.h>
 
 t_tarjan_vertex * CreateArr (int n) {
+    // allocate an array of n Tarjan vertices.
+    // each element will store the state of one vertex during Tarjan's algorithm.
     t_tarjan_vertex * array = malloc (n * sizeof (t_tarjan_vertex));
     if (!array) {
         printf("Allocation failed\n");
         exit (EXIT_FAILURE);
     }
+    // initialize each Tarjan vertex with default values
     for (int i=0; i<n; i++) {
-        array[i].id = i+1;
-        array[i].class_nb = -1;
-        array[i].link_nb = -1;
-        array[i].in_stack = 0;
+        array[i].id = i+1; // identifier: vertex number in the graph (1..n)
+        array[i].class_nb = -1; // Tarjan 'index' : -1 means "unvisited"
+        array[i].link_nb = -1; // lowlink value; -1 means "not computed yet"
+        array[i].in_stack = 0; // boolean: 0 = not in Tarjan's stack, 1 = in the stack
     }
     return array;
 }
