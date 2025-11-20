@@ -8,8 +8,8 @@
  * @brief Graph represented as adjacency list
  */
 typedef struct s_adjacency_list {
-    t_std_list *array;
-    int size;
+    t_std_list *array; // dynamic array of adjacency lists, one per vertex
+    int size; // total number of vertices in the graph
 }t_adjacency_list, *p_adjacency_list;
 
 /**

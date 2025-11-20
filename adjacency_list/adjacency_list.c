@@ -8,20 +8,21 @@
  * @return Pointer to the created structure, NULL on error
  */
 t_adjacency_list* empty_adjacency_list(int size) {
-    //creation of the adjacency list
+    // allocate memory for the adjacency list structure
     t_adjacency_list *p_adj_list = malloc(sizeof(t_adjacency_list));
 
     //check the creation
     if (p_adj_list == NULL) return NULL;
 
-    p_adj_list->size = size;
-    p_adj_list->array = malloc(size*sizeof(t_std_list));
+    p_adj_list->size = size; // store the number of vertices (size of the graph)
+    p_adj_list->array = malloc(size*sizeof(t_std_list)); // allocate the array of lists, one list per vertex
 
     if (p_adj_list->array == NULL) {
         free(p_adj_list);
         return NULL;
     }
-
+    // initialize each list in the array:
+    // all head pointers are set to NULL (empty lists)
     for (int i = 0; i < size; i++) {
         p_adj_list->array[i].head = NULL;
     }
