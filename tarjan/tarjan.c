@@ -88,53 +88,65 @@ void AddClassToPartition (p_partition p, p_class c) {
 }
 
 void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p_partition part, int *index) {
-    if (Ver == NULL  || S == NULL || part == NULL || index == NULL) return;
+    if (Ver == NULL  || S == NULL || part == NULL || index == NULL) return;  // if any essential pointer is NULL, we cannot continue
     Ver[v].class_nb = *index;
-    Ver[v].link_nb = *index;
-    (*index)++;
-    push(S,v);
-    Ver[v].in_stack=1;
-    p_cell neigh = graph.array[v].head;
+    Ver[v].link_nb = *index; // lowlink initially equals the index
+    (*index)++; // Increment global index for the next vertex
+    push(S,v); // push the current vertex onto the Tarjan stack
+    Ver[v].in_stack=1; // Mark v as being in the stack
+    p_cell neigh = graph.array[v].head; // get the adjacency list (neighbors) of vertex v
 
+    // explore all neighbors of v
     while (neigh != NULL) {
         int w = neigh->arrival -1;
+        // Case 1: neighbor w has not been visited yet (class_nb == -1)
         if (Ver[w].class_nb == -1) {
             Parcours(w, graph, Ver, S, part, index);
             if (Ver[w].link_nb < Ver[v].link_nb)
                 Ver[v].link_nb = Ver[w].link_nb;
         }
+        // Case 2: neighbor w is already on the stack
         else if (Ver[w].in_stack) {
             if (Ver[w].class_nb < Ver[v].link_nb)
                 Ver[v].link_nb = Ver[w].class_nb;
         }
+        // Move to the next neighbor in the adjacency list
         neigh = neigh->next;
     }
+    // If v is the root of a strongly connected component:
+    // Its lowlink equals its DFS index (class_nb)
     if (Ver[v].link_nb == Ver[v].class_nb) {
+        // Create a name for the new component, like "C1", "C2", ...
         char name[10];
         snprintf(name, sizeof(name), "C%d", part->nb_class + 1);
+        // Create a name for the new component, like "C1", "C2", ...
         p_class cls = CreateClass(name);
 
         int w;
+        // create a name for the new component, like "C1", "C2", ...
         do {
-            w = pop(S);
-            Ver[w].in_stack = 0;
-            AddVertexToClass(cls, Ver[w].id);
-        } while (w != v);
+            w = pop(S); // Get top vertex from stack
+            Ver[w].in_stack = 0; // Mark it as no longer in the stack
+            AddVertexToClass(cls, Ver[w].id); // Add the vertex to the current class
+        } while (w != v); // Stop when we have popped v
 
-        AddClassToPartition(part, cls);
+        AddClassToPartition(part, cls); // Add the completed class to the partition of the graph
     }
 }
 
 p_partition tarjan (t_adjacency_list graph) {
-    int n = graph.size;
-    p_tarjan_vertex Ver = CreateArr(n);
-    t_stack *S = CreateStack();
+    int n = graph.size; // Number of vertices in the graph
+    p_tarjan_vertex Ver = CreateArr(n); // Create and initialize the Tarjan vertex array
+    t_stack *S = CreateStack(); // Create an empty stack used by Tarjan's algorithm
     if (!S) {
         free(Ver);
         printf("Stack creation failed\n");
         return NULL;
     }
+
+    // Create an empty partition that will store all strongly connected components (classes)
     p_partition part = CreatePartition();
+    // Global index used for Tarjan numbering (DFS index)
     int index = 0;
 
     for (int i = 0; i < n; i++) {
@@ -142,8 +154,11 @@ p_partition tarjan (t_adjacency_list graph) {
             Parcours(i, graph, Ver, S, part, &index);
         }
     }
+    // we no longer need the Tarjan vertex array: free it
     free(Ver);
 
+
+    // ensure the stack is completely emptied, then free it
     while (!isEmpty(S)) {
         pop(S);
     }
