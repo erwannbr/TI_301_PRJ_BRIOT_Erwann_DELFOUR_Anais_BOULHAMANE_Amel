@@ -87,53 +87,71 @@ void AddClassToPartition (p_partition p, p_class c) {
     p->classes[p->nb_class++] = c;
 }
 
-void Parcours (int v, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *S, p_partition part, int *index) {
-    if (Ver == NULL  || S == NULL || part == NULL || index == NULL) return;  // if any essential pointer is NULL, we cannot continue
-    Ver[v].class_nb = *index;
-    Ver[v].link_nb = *index; // lowlink initially equals the index
-    (*index)++; // Increment global index for the next vertex
-    push(S,v); // push the current vertex onto the Tarjan stack
-    Ver[v].in_stack=1; // Mark v as being in the stack
-    p_cell neigh = graph.array[v].head; // get the adjacency list (neighbors) of vertex v
+//most important function of tarjan (it will allow to go from the matrix with some adjancencies to some classes (which tarjan will use to return a partition(so a group of classes)
+//so parcours is the function that will test all the possible path to see if they are forming classes (are doing a cicle (1->3->5->1))
+void Parcours (int currvertex, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *stack, p_partition partition, int *index) {
 
-    // explore all neighbors of v
+    // if no tarjan_vertex OR no stack OR no partition OR no index --> return
+    if (Ver == NULL  || stack == NULL || partition == NULL || index == NULL) return;
+
+    //we initialize the current class number (so the order of visit at 1)
+    Ver[currvertex].class_nb = *index;
+    //we intialize the smallest index reachable to imself (since there is no one else)
+    Ver[currvertex].link_nb = *index;
+    //we increment the index to go to the next vertex
+    (*index)++;
+    //we push the current element in the stack since its currently processing (in the stack)
+    push(stack,currvertex);
+    //put the current vertex in stack so we put the in_stack to 1.
+    Ver[currvertex].in_stack=1; // Mark v as being in the stack
+    //we get from the adjacency list all the neighbors of the current vertex
+    p_cell neigh = graph.array[currvertex].head;
+
+    //we explore all the neighborgs of the current vortex (ALL)
     while (neigh != NULL) {
-        int w = neigh->arrival -1;
-        // Case 1: neighbor w has not been visited yet (class_nb == -1)
-        if (Ver[w].class_nb == -1) {
-            Parcours(w, graph, Ver, S, part, index);
-            if (Ver[w].link_nb < Ver[v].link_nb)
-                Ver[v].link_nb = Ver[w].link_nb;
+        int currentneigh = neigh->arrival -1;
+        //case 1: the neighborgs is new so we recurcivly call parcours to cherche the neighborgs of the neighborg of vertex
+        if (Ver[currentneigh].class_nb == -1) {
+            Parcours(currentneigh, graph, Ver, stack, partition, index);
+            //we check if the recursion manage to find a path to an ancestor if so than the current vertex have a path to an ancestor
+            if (Ver[currentneigh].link_nb < Ver[currvertex].link_nb)
+                Ver[currvertex].link_nb = Ver[currentneigh].link_nb;
         }
-        // Case 2: neighbor w is already on the stack
-        else if (Ver[w].in_stack) {
-            if (Ver[w].class_nb < Ver[v].link_nb)
-                Ver[v].link_nb = Ver[w].class_nb;
+        //case 2: the neighborg is in the stack (means that currentneigh is an ancestor of current vertex
+        else if (Ver[currentneigh].in_stack) {
+            //if the class number (so the number of the visit is smaller than the link number of the
+            if (Ver[currentneigh].class_nb < Ver[currvertex].link_nb)
+                Ver[currvertex].link_nb = Ver[currentneigh].class_nb;
         }
-        // Move to the next neighbor in the adjacency list
+        //move to the next neigh
         neigh = neigh->next;
     }
-    // If v is the root of a strongly connected component:
-    // Its lowlink equals its DFS index (class_nb)
-    if (Ver[v].link_nb == Ver[v].class_nb) {
-        // Create a name for the new component, like "C1", "C2", ...
+
+    //if current vertex is the root of a strongly connected component
+    //in otehr word we cant reach a higher or lower than itself in the tree OR that the current vertex is entry point of a class
+    //Create the class and put it in the partition.
+    if (Ver[currvertex].link_nb == Ver[currvertex].class_nb) {
+        //create a name for the component
         char name[10];
-        snprintf(name, sizeof(name), "C%d", part->nb_class + 1);
-        // Create a name for the new component, like "C1", "C2", ...
-        p_class cls = CreateClass(name);
+        snprintf(name, sizeof(name), "C%d", partition->nb_class + 1);
+        //create a name for the newclass
+        p_class newclass = CreateClass(name);
 
         int w;
-        // create a name for the new component, like "C1", "C2", ...
+        //create name and building the class by popping the stack
         do {
-            w = pop(S); // Get top vertex from stack
+            w = pop(stack); // Get top vertex from stack
             Ver[w].in_stack = 0; // Mark it as no longer in the stack
-            AddVertexToClass(cls, Ver[w].id); // Add the vertex to the current class
-        } while (w != v); // Stop when we have popped v
+            AddVertexToClass(newclass, Ver[w].id); // Add the vertex to the current class
+        } while (w != currvertex); // Stop when we have popped v
 
-        AddClassToPartition(part, cls); // Add the completed class to the partition of the graph
+        //we add the newclass to the top
+        AddClassToPartition(partition, newclass); // Add the completed class to the partition of the graph
     }
 }
 
+//tarjan is the main function. it will use parcours to setup a partition (group of classes) and will do the allocation of memory etc.
+//its like a support for his sub-function parcours. but parcours is more important.
 p_partition tarjan (t_adjacency_list graph) {
     int n = graph.size; // Number of vertices in the graph
     p_tarjan_vertex Ver = CreateArr(n); // Create and initialize the Tarjan vertex array
