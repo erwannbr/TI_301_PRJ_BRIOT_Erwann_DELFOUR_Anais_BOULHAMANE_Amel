@@ -13,6 +13,7 @@ int main() {
     t_adjacency_list example3 = readGraph("DATA/exemple3.txt");
     t_adjacency_list example_valid_step3 = readGraph("DATA/exemple_valid_step3.txt");
     t_adjacency_list graph_meteo = readGraph("DATA/example_meteo.txt");
+    t_adjacency_list graph_chatgpt = readGraph("DATA/exemple1_from_chatGPT.txt");
 
 
     printf("Part 1: step 1 validation :\n");
@@ -21,7 +22,11 @@ int main() {
 
 
     printf("Part 1: step 2 validation :\n");
+    printf("Working exemple: ");
     checkIfMarkov(example1);
+    printf("\n");
+    printf("Not working exemple: ");
+    checkIfMarkov(graph_chatgpt);
     printf("\n");
 
 
@@ -74,47 +79,11 @@ int main() {
     printf("Meteo Matrix Power 7\n");
     printMatrix(Meteo);
 
-    p_matrix M = CreateMatFromAdjList(graph_meteo);
-    p_partition P = tarjan(graph_meteo);
-    int *map = create_array_vertex_to_class(graph_meteo.size, P);
-    t_link_array L;
-    links_init(&L);
-    list_class_links(&graph_meteo, map, &L);
+    printf("Part 3: step 2 validation\n");
+    step2_validation(graph_meteo);
+    printf("\n");
 
-    const int MAX_IT = 1000;
-    const float EPS = 1e-6f;
-
-    for (int c = 0; c < P->nb_class; ++c) {
-        p_class cls = P->classes[c];
-        int persistent = is_class_persistent(&L, c);
-
-    printf("Part 3: step 2 validation:");
+    printf("Part 3: step 3 validation:");
     periodicity(graph_meteo);
     return 0;
-}
-        printf("Classe C%d (", c+1);
-        for (int k = 0; k < cls->nb_vertices; ++k) {
-            if (k) printf(",");
-            printf("%d", cls->vertices[k]);
-        }
-        printf(") : %s\n", persistent ? "persistante" : "transitoire");
-
-        p_matrix S = SubMatrixByComponent(M, *P, c);
-        if (!S) { printf("  (Sous-matrice introuvable)\n"); continue; }
-
-        if (!persistent) {
-            printf("  Distribution limite: [");
-            for (int j = 0; j < S->size; ++j) printf("%s0", j ? " " : "");
-            printf("]\n");
-        } else {
-            float *pi = StationaryVectorFromSubmatrix(S, MAX_IT, EPS);
-            if (!pi) {
-                printf("  Erreur calcul stationnaire\n");
-            } else {
-                printf("  Distribution stationnaire ~ [");
-                for (int j = 0; j < S->size; ++j) printf("%s%.6f", j ? " " : "", pi[j]);
-                printf("]\n");
-                free(pi);
-            }
-        }
 }

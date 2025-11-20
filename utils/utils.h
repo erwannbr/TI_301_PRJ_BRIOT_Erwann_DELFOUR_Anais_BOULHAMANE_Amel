@@ -81,4 +81,6 @@ p_matrix MixMatrices(p_matrix, p_matrix, float );
 void SolveStationaryDistribution(p_matrix M, int);
 void periodicity(t_adjacency_list);
 
+void step2_validation(t_adjacency_list );
+
 #endif

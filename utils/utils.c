@@ -26,7 +26,7 @@ t_adjacency_list readGraph(const char *filename) {
 
     int nb_vertices, start, end;
     float proba;
-    // read the number of vertices (first integer in the file)
+    // read the number of vertices (first integer in the file) (fscanf sent 0 or 1)
     if (fscanf(file, "%d", &nb_vertices) != 1) {
         // if we cannot read it, print an error and exit
         perror("Could not read number of vertices");
@@ -90,7 +90,6 @@ static char *getID(int i)
  * @note Verifies that outgoing probabilities from each vertex sum to 1.0
  * @note Tolerance: ±0.01 for floating-point comparison
  */
-
 void checkIfMarkov(t_adjacency_list list) {
     int is_markov = 1; // it indicates if the graph satisfies the Markov property
 
@@ -322,48 +321,32 @@ p_matrix MixMatrices(p_matrix A, p_matrix B, float alpha) {
 
 //calculates stationary distribution for a specific class matrix. In other word we forec the matrix to settle into its natural equilibrium (which is called the stationnary distribution)
 void SolveStationaryDistribution(p_matrix M, int period) {
-    int n = M->size;
-    p_matrix WorkingMatrix;
+    p_matrix MatrixToSolve;
+    p_matrix I = NULL;
+    p_matrix Lazy = NULL;
 
     if (period > 1) {
-        printf("      Class is periodic (d=%d). Using Lazy Walk (0.5*M + 0.5*I).\n", period);
-        p_matrix I = CreateIdentityMatrix(n);
-        WorkingMatrix = MixMatrices(M, I, 0.5f);
-        DestroyMatrix(I);
+        printf("      [Periodic d=%d] Using Lazy Walk (0.5M + 0.5I).\n", period);
+        I = CreateIdentityMatrix(M->size);
+        Lazy = MixMatrices(M, I, 0.5f);
+        MatrixToSolve = Lazy;
     } else {
-        //if aperiodic
-        WorkingMatrix = CreateEmptyMatrix(n);
-        CopyMatrix(WorkingMatrix, M);
+        MatrixToSolve = M;
     }
 
-    //we search the end of the limits
-    p_matrix Current = CreateEmptyMatrix(n);
-    CopyMatrix(Current, WorkingMatrix);
+    float *pi = StationaryVectorFromSubmatrix(MatrixToSolve, 10000, 1e-6f);
 
-    p_matrix Next;
-    float diff = 1.0f;
-    int iter = 0;
-    float epsilon = 0.0001f;
-
-    while (diff > epsilon && iter < 10000) {
-        Next = MultiplyMatrices(Current, WorkingMatrix);
-        diff = DiffMatrix(Current, Next);
-
-        DestroyMatrix(Current);
-        Current = Next;
-        iter++;
+    if (pi) {
+        printf("   Stationary Distribution: [ ");
+        for (int j = 0; j < M->size; ++j) printf("%.4f ", pi[j]);
+        printf("]\n");
+        free(pi);
+    } else {
+        printf("      [Error] Did not converge.\n");
     }
 
-    printf("      Converged in %d iterations.\n", iter);
-    printf("      Stationary Distribution: [ ");
-    for (int j = 0; j < n; j++) {
-        printf("%.4f ", Current->data[0][j]);
-    }
-    printf("]\n");
-
-    //free needed to dont have leak of memory
-    DestroyMatrix(WorkingMatrix);
-    DestroyMatrix(Current);
+    if (I) DestroyMatrix(I);
+    if (Lazy) DestroyMatrix(Lazy);
 }
 
 void periodicity(t_adjacency_list graph) {
@@ -398,4 +381,67 @@ void periodicity(t_adjacency_list graph) {
     }
 
     DestroyMatrix(FullMatrix);
+}
+
+void step2_validation(t_adjacency_list graph) {
+    p_matrix M = CreateMatFromAdjList(graph);
+
+    p_partition P = tarjan(graph);
+
+    int *map = create_array_vertex_to_class(graph.size, P);
+    t_link_array L;
+    links_init(&L);
+    list_class_links(&graph, map, &L);
+
+    const int MAX_IT = 1000;
+    const float EPS = 1e-6f;
+
+    for (int c = 0; c < P->nb_class; ++c) {
+        p_class cls = P->classes[c];
+
+        // Check if the class is persistent (no edges leaving the class)
+        int persistent = is_class_persistent(c, &L);
+
+        // Print Class Name and Vertices
+        printf("Classe C%d (", c + 1);
+        for (int k = 0; k < cls->nb_vertices; ++k) {
+            if (k > 0) printf(", ");
+            printf("%d", cls->vertices[k]);
+        }
+        printf(") : %s\n", persistent ? "Persistent" : "Transient");
+
+        // Extract the sub-matrix for this specific class
+        p_matrix S = SubMatrixByComponent(M, *P, c);
+
+        if (!S) {
+            printf("  (Sub-matrices can't found)\n");
+            continue;
+        }
+
+        if (!persistent) {
+            // Transient classes eventually have 0 probability in the long run
+            printf("  Distribution limit: [ ");
+            for (int j = 0; j < S->size; ++j) printf("0.0000 ");
+            printf("]\n");
+        } else {
+            // Persistent classes have a stationary distribution (Equilibrium)
+            float *pi = StationaryVectorFromSubmatrix(S, MAX_IT, EPS);
+            if (!pi) {
+                printf("  Error on computing\n");
+            } else {
+                printf("   Stationary Distribution: [ ");
+                for (int j = 0; j < S->size; ++j) {
+                    printf("%.4f ", pi[j]);
+                }
+                printf("]\n");
+                free(pi); // Don't forget to free the vector
+            }
+        }
+
+        DestroyMatrix(S);
+    }
+
+    DestroyMatrix(M);
+    if (map) free(map);
+    if (L.links) free(L.links);
 }
