@@ -16,29 +16,34 @@
  * @note Exits program on file error
  */
 t_adjacency_list readGraph(const char *filename) {
+    // open the file in text mode for reading ("rt")
     FILE *file = fopen(filename, "rt");
     if (!file) {
+        // if the file could not be opened, print an error message and stop the program
         perror("Could not open file for reading");
         exit(EXIT_FAILURE);
     }
 
     int nb_vertices, start, end;
     float proba;
-
+    // read the number of vertices (first integer in the file)
     if (fscanf(file, "%d", &nb_vertices) != 1) {
+        // if we cannot read it, print an error and exit
         perror("Could not read number of vertices");
         fclose(file);
         exit(EXIT_FAILURE);
     }
-
+    // create an empty adjacency list with nb_vertices vertices
     t_adjacency_list *gp = empty_adjacency_list(nb_vertices);
-
+    // read each line: start vertex, end vertex, and probability
+    // Continue while fscanf successfully reads 3 values
     while (fscanf(file, "%d %d %f", &start, &end, &proba) == 3) {
+        // add an edge from 'start' to 'end' with probability 'proba'
+        // we use start - 1 because array indices go from 0 to nb_vertices - 1
         addCellToList(&gp->array[start - 1], end, proba);
     }
 
     fclose(file);
-
     t_adjacency_list g = *gp;
     free(gp);
     return g;

@@ -33,23 +33,30 @@ t_adjacency_list* empty_adjacency_list(int size) {
  * @brief Displays the complete adjacency list
  * @param p_adj_list Pointer to the adjacency list
  */
+
+
 void display_adjacency_list(p_adjacency_list p_adj_list) {
-    //check if the p_adj_list is null or if the array is empty
+    // check if the adjacency list pointer is NULL
     if (p_adj_list == NULL) {
-        fprintf(stderr, "Error: NULL adjacency list\n");
+        // nothing to display if the structure does not exist
         return;
     }
 
+    // check if the internal array is NULL
     if (p_adj_list->array == NULL) {
-        fprintf(stderr, "Error: NULL adjacency list array\n");
         return;
     }
 
-    //function to display the non-empty and existing p_adj_list
+    // loop through all vertices in the graph
     for (int i = 0; i < p_adj_list->size; i++) {
+
+        // display the index of the current vertex
         printf("List for vertex %d : ", i + 1);
+
+        // display the linked list of outgoing edges for this vertex
         DisplayList(p_adj_list->array[i]);
+
+        // move to the next line after printing the list
         printf("\n");
     }
 }
-
