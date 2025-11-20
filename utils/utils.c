@@ -294,4 +294,108 @@ void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char 
     }
     free(M);
     free(MNext);
+
+}
+
+//we use lazy chain because otherwise we wille never get an answer otherwise (thanks chat gpt because it is impossible to find this in other ways)
+//we create an identity matrix (for the lazy work)
+p_matrix CreateIdentityMatrix(int n) {
+    p_matrix I = CreateEmptyMatrix(n);
+    for (int i = 0; i < n; i++) {
+        I->data[i][i] = 1.0f;
+    }
+    return I;
+}
+
+//mix matrices (mathematical expression: 0.5*M + 0.5*I) because other wise it will cycle forever (ping-pong (A= 1, B= 0->A=0, B=1->etc) so with alpha = 0.5
+p_matrix MixMatrices(p_matrix A, p_matrix B, float alpha) {
+    if (A->size != B->size) return NULL;
+    int n = A->size;
+    p_matrix R = CreateEmptyMatrix(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            R->data[i][j] = alpha * A->data[i][j] + (1.0f - alpha) * B->data[i][j];
+        }
+    }
+    return R;
+}
+
+//calculates stationary distribution for a specific class matrix. In other word we forec the matrix to settle into its natural equilibrium (which is called the stationnary distribution)
+void SolveStationaryDistribution(p_matrix M, int period) {
+    int n = M->size;
+    p_matrix WorkingMatrix;
+
+    if (period > 1) {
+        printf("      Class is periodic (d=%d). Using Lazy Walk (0.5*M + 0.5*I).\n", period);
+        p_matrix I = CreateIdentityMatrix(n);
+        WorkingMatrix = MixMatrices(M, I, 0.5f);
+        DestroyMatrix(I);
+    } else {
+        //if aperiodic
+        WorkingMatrix = CreateEmptyMatrix(n);
+        CopyMatrix(WorkingMatrix, M);
+    }
+
+    //we search the end of the limits
+    p_matrix Current = CreateEmptyMatrix(n);
+    CopyMatrix(Current, WorkingMatrix);
+
+    p_matrix Next;
+    float diff = 1.0f;
+    int iter = 0;
+    float epsilon = 0.0001f;
+
+    while (diff > epsilon && iter < 10000) {
+        Next = MultiplyMatrices(Current, WorkingMatrix);
+        diff = DiffMatrix(Current, Next);
+
+        DestroyMatrix(Current);
+        Current = Next;
+        iter++;
+    }
+
+    printf("      Converged in %d iterations.\n", iter);
+    printf("      Stationary Distribution: [ ");
+    for (int j = 0; j < n; j++) {
+        printf("%.4f ", Current->data[0][j]);
+    }
+    printf("]\n");
+
+    //free needed to dont have leak of memory
+    DestroyMatrix(WorkingMatrix);
+    DestroyMatrix(Current);
+}
+
+void periodicity(t_adjacency_list graph) {
+    //get partition using tarjan
+    p_partition partition = tarjan(graph);
+    p_matrix FullMatrix = CreateMatFromAdjList(graph);
+
+    //iterate over each classes found
+    for (int i = 0; i < partition->nb_class; i++) {
+        t_class *cls = partition->classes[i];
+
+        printf("\nAnalyzing Class #%d (Vertices: ", i + 1);
+        for(int v=0; v < cls->nb_vertices; v++) printf("%d ", cls->vertices[v]);
+        printf("):\n");
+
+        //extract submatrix
+        p_matrix subM = SubMatrixByComponent(FullMatrix, *partition, i);
+
+        if (subM == NULL) {
+            printf("   Could not extract matrix (likely size 0 or invalid index).\n");
+            continue;
+        }
+
+        //calculate the period
+        int period = getPeriod(subM);
+        printf("   Period: %d\n", period);
+
+        // calculate the stationnary distribution
+        SolveStationaryDistribution(subM, period);
+
+        DestroyMatrix(subM);
+    }
+
+    DestroyMatrix(FullMatrix);
 }

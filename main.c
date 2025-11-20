@@ -7,6 +7,7 @@
 #include "matrix/matrix.h"
 
 int main() {
+    float epsilon = 0.01;
     t_adjacency_list example1 = readGraph("DATA/exemple1.txt");
     t_adjacency_list example2 = readGraph("DATA/exemple2.txt");
     t_adjacency_list example3 = readGraph("DATA/exemple3.txt");
@@ -57,11 +58,14 @@ int main() {
     printMatrix(Meteo);
     PowerMatrix (Meteo, 3);
     PowerMatrix (Meteo, 7);
-    float epsilon = 0.01;
+
+    printf("Part 3: step 2 validation:\n");
     ComputeStationaryMatrix (example1, epsilon, "Example 1");
     ComputeStationaryMatrix (example2, epsilon, "Example 2");
     ComputeStationaryMatrix (example3, epsilon, "Example 3");
 
+    printf("Part 3: step 2 validation:");
+    periodicity(graph_meteo);
     return 0;
 }
 

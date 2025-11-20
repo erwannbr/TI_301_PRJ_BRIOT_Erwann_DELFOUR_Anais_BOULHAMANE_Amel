@@ -21,4 +21,11 @@ float DiffMatrix(p_matrix M, p_matrix N);
 void printMatrix(p_matrix M);
 
 p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index);
+
+//need to add this to be sure that there is no memory leaks
+void DestroyMatrix(p_matrix M);
+
+int gcd(int *vals, int nbvals);
+int getPeriod(p_matrix sub_matrix);
+
 #endif //MATRIX_H
