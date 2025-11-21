@@ -105,7 +105,7 @@ void checkIfMarkov(t_adjacency_list list) {
         }
 
         // sum all outgoing probabilities for the current vertex
-        if (total_proba < 0.99f || total_proba > 1.01f) {
+        if (total_proba < 0.99 || total_proba > 1) {
             is_markov = 0;
 
             // print detailed error

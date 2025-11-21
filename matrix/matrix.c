@@ -4,31 +4,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 p_matrix CreateEmptyMatrix(int n) {
+    // Allocate memory for the matrix structure
     p_matrix M = (p_matrix)malloc(sizeof(t_matrix));
     if (!M) {
-        fprintf(stderr, "Erreur d'allocation de la matrice.\n");
-        exit(EXIT_FAILURE);
+        // Allocation failed
+        return NULL;
     }
 
+    // Store the dimension of the matrix (n x n)
     M->size = n;
+
+    // Allocate an array of n pointers, one pointer for each row
     M->data = malloc(n * sizeof(float *));
+
+    // For each row, allocate n floats and initialize them to 0 using calloc
     for (int i = 0; i < n; i++) {
         M->data[i] = calloc(n, sizeof(float));
+        // calloc sets all entries in the row to 0.0
     }
-
     return M;
 }
+
 p_matrix CreateMatFromAdjList(t_adjacency_list graph) {
     int n = graph.size;
+    // Create an empty n×n matrix initialized with zeros
     p_matrix M = CreateEmptyMatrix(n);
-
+    // For each vertex i in the graph
     for (int i = 0; i < n; i++) {
+        // Pointer to the adjacency list of vertex i
         t_cell *neigh = graph.array[i].head;
+        // Traverse all outgoing edges from vertex i
         while (neigh != NULL) {
+            // j = index of the destination vertex
             int j = neigh->arrival - 1;
+            // Fill the matrix entry M[i][j] with the transition probability
             M->data[i][j] = neigh->probability;
+            // Move to next neighbor in the adjacency list
             neigh = neigh->next;
         }
     }
