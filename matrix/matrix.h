@@ -70,7 +70,7 @@ void printMatrix(p_matrix M);
  * @param compo_index The index of the component to extract.
  * @return p_matrix The submatrix restricted to the vertices of the specified component.
  */
-p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index);
+p_matrix subMatrix(p_matrix M, t_partition part, int compo_index);
 
 //need to add this to be sure that there is no memory leaks
 /**

@@ -419,7 +419,7 @@ void periodicity(t_adjacency_list graph) {
         printf("):\n");
 
         //extract submatrix
-        p_matrix subM = SubMatrixByComponent(FullMatrix, *partition, i);
+        p_matrix subM = subMatrix(FullMatrix, *partition, i);
 
         if (subM == NULL) {
             printf("   Could not extract matrix (likely size 0 or invalid index).\n");
@@ -474,7 +474,7 @@ void step2_validation(t_adjacency_list graph) {
         printf(") : %s\n", persistent ? "Persistent" : "Transient");
 
         // Extract the sub-matrix for this specific class
-        p_matrix S = SubMatrixByComponent(M, *P, c);
+        p_matrix S = subMatrix(M, *P, c);
 
         if (!S) {
             printf("  (Sub-matrices can't found)\n");

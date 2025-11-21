@@ -181,29 +181,44 @@ void printMatrix(p_matrix M) {
 }
 
 /**
- * @brief Extracts a submatrix corresponding to a specific Strongly Connected Component (SCC).
+ * @brief Extracts a submatrix corresponding to a specific component
+ *        (class) of the graph partition.
  *
- * Maps global vertex indices to local submatrix indices based on the partition class.
+ * The idea:
+ * - 'matrix' is the full transition matrix of the Markov graph (n x n).
+ * - 'part' is the partition into strongly connected components (classes).
+ * - 'compo_index' selects one class (component) inside this partition.
  *
- * @param M The original full graph matrix.
- * @param part The partition containing the SCCs.
- * @param compo_index The index of the specific class (SCC) to extract.
- * @return p_matrix Pointer to the new submatrix.
+ * This function builds a new matrix that only contains the rows and columns
+ * of the vertices that belong to this selected class.
+ *
+ * Example:
+ *   - Suppose matrix is 6x6 (vertices 1..6).
+ *   - Component C2 = {2, 5, 6}.
+ *   - Then the submatrix for C2 is the 3x3 matrix whose entries are:
+ *         [ M(2,2)  M(2,5)  M(2,6) ]
+ *         [ M(5,2)  M(5,5)  M(5,6) ]
+ *         [ M(6,2)  M(6,5)  M(6,6) ]
  */
-p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {
-    if (M == NULL) return NULL;
+
+p_matrix subMatrix(p_matrix M, t_partition part, int compo_index)
+{
+    if (!M) return NULL;
     if (compo_index < 0 || compo_index >= part.nb_class) return NULL;
 
-    t_class *classe = part.classes[compo_index];
-    int n = classe->nb_vertices;
+    t_class *cls = part.classes[compo_index];
+    int n = cls->nb_vertices;
     if (n <= 0) return NULL;
 
+    // allocate an empty n×n submatrix
     p_matrix sub = CreateEmptyMatrix(n);
+    if (!sub) return NULL;
 
+    // fill the submatrix with the corresponding rows/columns
     for (int i = 0; i < n; i++) {
-        int row = classe->vertices[i] - 1;
+        int row = cls->vertices[i] - 1;   // 1-based → 0-based
         for (int j = 0; j < n; j++) {
-            int col = classe->vertices[j] - 1;
+            int col = cls->vertices[j] - 1;
             sub->data[i][j] = M->data[row][col];
         }
     }
