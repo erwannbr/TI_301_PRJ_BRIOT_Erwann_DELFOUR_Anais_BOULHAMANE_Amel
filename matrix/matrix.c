@@ -71,15 +71,20 @@ p_matrix CreateMatFromAdjList(t_adjacency_list graph) {
  * @param mat The destination matrix (must be allocated and of same size).
  * @param matsrc The source matrix.
  */
+
 void CopyMatrix(p_matrix mat, p_matrix matsrc) {
+    // Check that both matrices have the same size (n x n)
     if (mat->size != matsrc->size) {
-        fprintf(stderr, "Erreur : matrices de tailles différentes.\n");
+        // Sizes differ: do nothing and return.
         return;
     }
 
-    for (int i = 0; i < matsrc->size; i++)
-        for (int j = 0; j < matsrc->size; j++)
+    // Copy each element from matsrc into mat
+    for (int i = 0; i < matsrc->size; i++) {
+        for (int j = 0; j < matsrc->size; j++) {
             mat->data[i][j] = matsrc->data[i][j];
+        }
+    }
 }
 
 /**
