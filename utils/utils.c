@@ -12,7 +12,7 @@
  * @param filename Path to the file containing graph data
  * @return Adjacency list representation of the graph
  * @note File format: first line = number of vertices,
- *       following lines = "start end probability"
+ * following lines = "start end probability"
  * @note Exits program on file error
  */
 t_adjacency_list readGraph(const char *filename) {
@@ -226,6 +226,12 @@ int isEmpty (t_stack *s) {
     return (s->head == NULL);
 }
 
+/**
+ * @brief Prints links between classes before and after removing transitive edges.
+ *
+ * @param partition The partition of the graph.
+ * @param class_links Structure containing all links between classes.
+ */
 void print_class(p_partition partition,  t_link_array class_links) {
     printf("Links between classes:\n");
     for (int i = 0; i < class_links.size; i++) {
@@ -246,6 +252,11 @@ void print_class(p_partition partition,  t_link_array class_links) {
     printf("\n");
 }
 
+/**
+ * @brief Prints the contents (vertices) of each component in the partition.
+ *
+ * @param partition The partition structure containing the components.
+ */
 void print_component(p_partition partition) {
     for (int i = 0; i < partition->nb_class; i++) {
         p_class c = partition->classes[i];
@@ -259,6 +270,12 @@ void print_component(p_partition partition) {
     printf("\n");
 }
 
+/**
+ * @brief Raises a matrix to a specified power and prints it.
+ *
+ * @param M The base matrix.
+ * @param power The exponent.
+ */
 void PowerMatrix (p_matrix M, int power) {
     for (int i=0; i<power-1; i++) {
         M = MultiplyMatrices(M, M);
@@ -267,6 +284,15 @@ void PowerMatrix (p_matrix M, int power) {
     printMatrix(M);
 }
 
+/**
+ * @brief Computes and prints the stationary matrix by repeated squaring until convergence.
+ *
+ * Checks for convergence using the difference between successive powers (M^2^k).
+ *
+ * @param graph The source graph.
+ * @param epsilon The convergence threshold.
+ * @param graph_name Name of the graph for display purposes.
+ */
 void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char *graph_name) {
     p_matrix M = CreateMatFromAdjList(graph);
     p_matrix MNext = MultiplyMatrices(M, M);
@@ -296,6 +322,12 @@ void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char 
 
 }
 
+/**
+ * @brief Creates an identity matrix of size n x n.
+ *
+ * @param n The dimension of the matrix.
+ * @return p_matrix The resulting identity matrix.
+ */
 //we use lazy chain because otherwise we wille never get an answer otherwise (thanks chat gpt because it is impossible to find this in other ways)
 //we create an identity matrix (for the lazy work)
 p_matrix CreateIdentityMatrix(int n) {
@@ -306,6 +338,16 @@ p_matrix CreateIdentityMatrix(int n) {
     return I;
 }
 
+/**
+ * @brief Computes a linear combination of two matrices (alpha*A + (1-alpha)*B).
+ *
+ * Used to create a "Lazy Walk" matrix to solve periodic chains.
+ *
+ * @param A First matrix.
+ * @param B Second matrix.
+ * @param alpha Weight for the first matrix.
+ * @return p_matrix The resulting mixed matrix.
+ */
 //mix matrices (mathematical expression: 0.5*M + 0.5*I) because other wise it will cycle forever (ping-pong (A= 1, B= 0->A=0, B=1->etc) so with alpha = 0.5
 p_matrix MixMatrices(p_matrix A, p_matrix B, float alpha) {
     if (A->size != B->size) return NULL;
@@ -319,6 +361,14 @@ p_matrix MixMatrices(p_matrix A, p_matrix B, float alpha) {
     return R;
 }
 
+/**
+ * @brief Computes and prints the stationary distribution vector for a matrix.
+ *
+ * Handles periodic matrices by applying a "Lazy Walk" transformation before solving.
+ *
+ * @param M The transition matrix.
+ * @param period The period of the matrix (1 if aperiodic).
+ */
 //calculates stationary distribution for a specific class matrix. In other word we forec the matrix to settle into its natural equilibrium (which is called the stationnary distribution)
 void SolveStationaryDistribution(p_matrix M, int period) {
     p_matrix MatrixToSolve;
@@ -349,6 +399,13 @@ void SolveStationaryDistribution(p_matrix M, int period) {
     if (Lazy) DestroyMatrix(Lazy);
 }
 
+/**
+ * @brief Analyzes periodicity and stationary distribution for all components of a graph.
+ *
+ * Decomposes the graph into SCCs, calculates the period for each, and solves for the stationary distribution.
+ *
+ * @param graph The graph to analyze.
+ */
 void periodicity(t_adjacency_list graph) {
     //get partition using tarjan
     p_partition partition = tarjan(graph);
@@ -383,6 +440,13 @@ void periodicity(t_adjacency_list graph) {
     DestroyMatrix(FullMatrix);
 }
 
+/**
+ * @brief Performs the second step of validation: classification and distribution analysis.
+ *
+ * Identifies persistent vs transient classes and computes stationary distributions for persistent ones.
+ *
+ * @param graph The graph to analyze.
+ */
 void step2_validation(t_adjacency_list graph) {
     p_matrix M = CreateMatFromAdjList(graph);
 

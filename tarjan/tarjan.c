@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Allocates and initializes an array of Tarjan vertices.
+ *
+ * @param n The number of vertices to allocate.
+ * @return t_tarjan_vertex* Pointer to the allocated array.
+ */
 t_tarjan_vertex * CreateArr (int n) {
     // allocate an array of n Tarjan vertices.
     // each element will store the state of one vertex during Tarjan's algorithm.
@@ -23,6 +29,12 @@ t_tarjan_vertex * CreateArr (int n) {
     return array;
 }
 
+/**
+ * @brief Creates a new class structure with a specified name.
+ *
+ * @param name_of_class The name to assign to the class.
+ * @return p_class Pointer to the newly created class.
+ */
 p_class CreateClass (const char * name_of_class) {
     p_class c = malloc(sizeof(t_class));
     if (!c) {
@@ -42,6 +54,12 @@ p_class CreateClass (const char * name_of_class) {
 
 }
 
+/**
+ * @brief Adds a vertex ID to an existing class, resizing if necessary.
+ *
+ * @param c The class to which the vertex is added.
+ * @param vertex_id The ID of the vertex.
+ */
 void AddVertexToClass (p_class c, int vertex_id) {
     if (!c) return;
     if (c->nb_vertices >= c->size) {
@@ -56,6 +74,11 @@ void AddVertexToClass (p_class c, int vertex_id) {
     c->vertices[c->nb_vertices++] = vertex_id;
 }
 
+/**
+ * @brief Creates a new partition structure to hold a collection of classes.
+ *
+ * @return t_partition* Pointer to the newly created partition.
+ */
 t_partition *CreatePartition() {
     t_partition *p = malloc(sizeof(t_partition));
     if (!p) {
@@ -73,6 +96,12 @@ t_partition *CreatePartition() {
     return p;
 }
 
+/**
+ * @brief Adds a class to a partition, resizing the partition if necessary.
+ *
+ * @param p The partition to modify.
+ * @param c The class to add to the partition.
+ */
 void AddClassToPartition (p_partition p, p_class c) {
     if (!p || !c) return;
     if (p->nb_class >= p->size) {
@@ -88,6 +117,18 @@ void AddClassToPartition (p_partition p, p_class c) {
 }
 
 
+/**
+ * @brief Recursive DFS function to traverse the graph and identify SCCs.
+ *
+ * Updates low-link values, manages the stack, and creates classes when a root is found.
+ *
+ * @param currvertex The index of the current vertex.
+ * @param graph The adjacency list of the graph.
+ * @param Ver The array of Tarjan vertex states.
+ * @param stack The stack used for the algorithm.
+ * @param partition The partition where classes will be stored.
+ * @param index Pointer to the global traversal index.
+ */
 //most important function of tarjan (it will allow to go from the matrix with some adjancencies to some classes (which tarjan will use to return a partition(so a group of classes)
 //so parcours is the function that will test all the possible path to see if they are forming classes (are doing a cicle (1->3->5->1))
 void Parcours (int currvertex, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *stack, p_partition partition, int *index) {
@@ -152,6 +193,14 @@ void Parcours (int currvertex, t_adjacency_list graph, p_tarjan_vertex Ver, t_st
 }
 
 
+/**
+ * @brief Main function to execute Tarjan's algorithm.
+ *
+ * Initializes memory and iterates through all vertices to find Strongly Connected Components.
+ *
+ * @param graph The adjacency list representation of the graph.
+ * @return p_partition A partition containing all identified classes (SCCs).
+ */
 //tarjan is the main function. it will use parcours to setup a partition (group of classes) and will do the allocation of memory etc.
 //its like a support for his sub-function parcours. but parcours is more important.
 p_partition tarjan (t_adjacency_list graph) {

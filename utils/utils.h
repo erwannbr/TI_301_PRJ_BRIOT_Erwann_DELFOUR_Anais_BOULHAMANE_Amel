@@ -70,17 +70,79 @@ int pop(t_stack *s);
  */
 int isEmpty(t_stack *s);
 
+/**
+ * @brief Prints the connections between Strongly Connected Components (classes).
+ * @param part The partition containing the classes.
+ * @param links The array of links (edges) between these classes.
+ */
 void print_class(p_partition ,  t_link_array);
+
+/**
+ * @brief Prints the list of vertices contained in each class of the partition.
+ * @param part The partition to display.
+ */
 void print_component(p_partition);
 
+/**
+ * @brief Raises a matrix to a specific power and prints the result.
+ * @param M The matrix to multiply.
+ * @param power The exponent to raise the matrix to.
+ */
 void PowerMatrix (p_matrix M, int power);
+
+/**
+ * @brief Computes the stationary matrix using iterative multiplication (M^k).
+ *
+ * Continues until the difference between iterations is less than epsilon.
+ *
+ * @param graph The graph to analyze.
+ * @param epsilon The convergence threshold.
+ * @param graph_name Name of the graph (for display purposes).
+ */
 void ComputeStationaryMatrix (t_adjacency_list graph, float epsilon, const char *graph_name);
 
+/**
+ * @brief Creates an identity matrix of size n.
+ * @param n The dimension of the matrix.
+ * @return Pointer to the identity matrix.
+ */
 p_matrix CreateIdentityMatrix(int);
+
+/**
+ * @brief Computes the linear combination of two matrices (alpha*A + (1-alpha)*B).
+ *
+ * Used for the Lazy Walk implementation (0.5*M + 0.5*I).
+ *
+ * @param A The first matrix.
+ * @param B The second matrix.
+ * @param alpha The mixing coefficient.
+ * @return Pointer to the resulting matrix.
+ */
 p_matrix MixMatrices(p_matrix, p_matrix, float );
+
+/**
+ * @brief Solves for the stationary distribution vector.
+ *
+ * Handles periodic matrices by converting them to a Lazy Walk before solving.
+ *
+ * @param M The transition matrix.
+ * @param period The period of the matrix (1 = aperiodic).
+ */
 void SolveStationaryDistribution(p_matrix M, int);
+
+/**
+ * @brief High-level analysis function: Finds SCCs, periods, and distributions.
+ * @param graph The graph to analyze.
+ */
 void periodicity(t_adjacency_list);
 
+/**
+ * @brief Performs validation step 2: Classification of states.
+ *
+ * Identifies classes as Persistent or Transient and computes limits accordingly.
+ *
+ * @param graph The graph to validate.
+ */
 void step2_validation(t_adjacency_list );
 
 #endif

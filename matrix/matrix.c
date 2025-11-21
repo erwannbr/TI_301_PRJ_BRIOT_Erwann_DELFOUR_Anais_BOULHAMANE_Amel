@@ -5,6 +5,12 @@
 #include <stdlib.h>
 
 
+/**
+ * @brief Allocates and initializes a square matrix of size n x n with zeros.
+ *
+ * @param n The dimension of the matrix.
+ * @return p_matrix Pointer to the newly allocated matrix.
+ */
 p_matrix CreateEmptyMatrix(int n) {
     p_matrix M = (p_matrix)malloc(sizeof(t_matrix));
     if (!M) {
@@ -20,6 +26,15 @@ p_matrix CreateEmptyMatrix(int n) {
 
     return M;
 }
+
+/**
+ * @brief Converts an adjacency list graph into a transition matrix (probability matrix).
+ *
+ * Each entry M[i][j] represents the probability of moving from node i to node j.
+ *
+ * @param graph The source adjacency list.
+ * @return p_matrix Pointer to the resulting matrix.
+ */
 p_matrix CreateMatFromAdjList(t_adjacency_list graph) {
     int n = graph.size;
     p_matrix M = CreateEmptyMatrix(n);
@@ -35,6 +50,13 @@ p_matrix CreateMatFromAdjList(t_adjacency_list graph) {
 
     return M;
 }
+
+/**
+ * @brief Copies the content of a source matrix into a destination matrix.
+ *
+ * @param mat The destination matrix (must be allocated and of same size).
+ * @param matsrc The source matrix.
+ */
 void CopyMatrix(p_matrix mat, p_matrix matsrc) {
     if (mat->size != matsrc->size) {
         fprintf(stderr, "Erreur : matrices de tailles différentes.\n");
@@ -45,6 +67,14 @@ void CopyMatrix(p_matrix mat, p_matrix matsrc) {
         for (int j = 0; j < matsrc->size; j++)
             mat->data[i][j] = matsrc->data[i][j];
 }
+
+/**
+ * @brief Performs matrix multiplication (A * B).
+ *
+ * @param A The first matrix.
+ * @param B The second matrix.
+ * @return p_matrix A new matrix containing the result.
+ */
 p_matrix MultiplyMatrices(p_matrix A, p_matrix B) {
     if (A->size != B->size) {
         fprintf(stderr, "Erreur : tailles incompatibles pour la multiplication.\n");
@@ -66,6 +96,16 @@ p_matrix MultiplyMatrices(p_matrix A, p_matrix B) {
 
     return R;
 }
+
+/**
+ * @brief Calculates the sum of absolute differences between two matrices.
+ *
+ * Used to check for convergence (e.g., if M and N are very close).
+ *
+ * @param M The first matrix.
+ * @param N The second matrix.
+ * @return float The total accumulated difference.
+ */
 float DiffMatrix(p_matrix M, p_matrix N) {
     if (M->size != N->size) {
         fprintf(stderr, "Erreur : matrices de tailles différentes pour diffMatrix.\n");
@@ -84,6 +124,12 @@ float DiffMatrix(p_matrix M, p_matrix N) {
 
     return somme;
 }
+
+/**
+ * @brief Prints the matrix values to the standard output.
+ *
+ * @param M The matrix to display.
+ */
 void printMatrix(p_matrix M) {
     int n = M->size;
     for (int i = 0; i<n ; i++) {
@@ -97,6 +143,16 @@ void printMatrix(p_matrix M) {
     printf("\n");
 }
 
+/**
+ * @brief Extracts a submatrix corresponding to a specific Strongly Connected Component (SCC).
+ *
+ * Maps global vertex indices to local submatrix indices based on the partition class.
+ *
+ * @param M The original full graph matrix.
+ * @param part The partition containing the SCCs.
+ * @param compo_index The index of the specific class (SCC) to extract.
+ * @return p_matrix Pointer to the new submatrix.
+ */
 p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {
     if (M == NULL) return NULL;
     if (compo_index < 0 || compo_index >= part.nb_class) return NULL;
@@ -118,6 +174,16 @@ p_matrix SubMatrixByComponent(p_matrix M, t_partition part, int compo_index) {
     return sub;
 }
 
+/**
+ * @brief Computes the stationary probability vector (Pi) for a submatrix.
+ *
+ * Uses the iterative power method until convergence or max iterations is reached.
+ *
+ * @param S The submatrix (transition matrix of an SCC).
+ * @param max_iter Maximum number of iterations.
+ * @param eps Convergence threshold (epsilon).
+ * @return float* A dynamically allocated array representing the stationary vector.
+ */
 float *StationaryVectorFromSubmatrix(p_matrix S, int max_iter, float eps) {
     if (!S || S->size <= 0 || max_iter <= 0 || eps <= 0.0f) return NULL;
     int n = S->size;
@@ -170,6 +236,11 @@ float *StationaryVectorFromSubmatrix(p_matrix S, int max_iter, float eps) {
     return pi;   /* à free par l’appelant */
 }
 
+/**
+ * @brief Frees all memory associated with a matrix.
+ *
+ * @param M The matrix to destroy.
+ */
 void DestroyMatrix(p_matrix M) {
     if (M == NULL) {
         return;
