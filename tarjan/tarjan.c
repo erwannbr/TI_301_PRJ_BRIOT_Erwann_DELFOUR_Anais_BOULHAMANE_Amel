@@ -87,6 +87,7 @@ void AddClassToPartition (p_partition p, p_class c) {
     p->classes[p->nb_class++] = c;
 }
 
+
 //most important function of tarjan (it will allow to go from the matrix with some adjancencies to some classes (which tarjan will use to return a partition(so a group of classes)
 //so parcours is the function that will test all the possible path to see if they are forming classes (are doing a cicle (1->3->5->1))
 void Parcours (int currvertex, t_adjacency_list graph, p_tarjan_vertex Ver, t_stack *stack, p_partition partition, int *index) {
@@ -150,36 +151,39 @@ void Parcours (int currvertex, t_adjacency_list graph, p_tarjan_vertex Ver, t_st
     }
 }
 
+
 //tarjan is the main function. it will use parcours to setup a partition (group of classes) and will do the allocation of memory etc.
 //its like a support for his sub-function parcours. but parcours is more important.
 p_partition tarjan (t_adjacency_list graph) {
-    int n = graph.size; // Number of vertices in the graph
-    p_tarjan_vertex Ver = CreateArr(n); // Create and initialize the Tarjan vertex array
-    t_stack *S = CreateStack(); // Create an empty stack used by Tarjan's algorithm
-    if (!S) {
+    int n = graph.size; //get the size of the graph (of size n)
+    p_tarjan_vertex Ver = CreateArr(n); //create the tarjan vertex array
+    t_stack *Stack = CreateStack(); //create the stack for the parcours function
+
+    //check if the rceation worked
+    if (!Stack) {
         free(Ver);
         printf("Stack creation failed\n");
         return NULL;
     }
 
-    // Create an empty partition that will store all strongly connected components (classes)
+    //create the empty partition that will store the classes found in the parcours function
     p_partition part = CreatePartition();
-    // Global index used for Tarjan numbering (DFS index)
+    //the global index
     int index = 0;
 
+    //the main algo, if the tarjan function (function that create the partition)
     for (int i = 0; i < n; i++) {
         if (Ver[i].class_nb == -1) {
-            Parcours(i, graph, Ver, S, part, &index);
+            Parcours(i, graph, Ver, Stack, part, &index);
         }
     }
-    // we no longer need the Tarjan vertex array: free it
+
+    //free to be sure that we got no leak of memory + free the stack to restart a new one
     free(Ver);
-
-
-    // ensure the stack is completely emptied, then free it
-    while (!isEmpty(S)) {
-        pop(S);
+    while (!isEmpty(Stack)) {
+        pop(Stack);
     }
-    free(S);
+    free(Stack);
+
     return part;
 }
