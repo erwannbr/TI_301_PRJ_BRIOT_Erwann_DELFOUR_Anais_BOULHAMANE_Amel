@@ -94,26 +94,32 @@ void CopyMatrix(p_matrix mat, p_matrix matsrc) {
  * @param B The second matrix.
  * @return p_matrix A new matrix containing the result.
  */
+
 p_matrix MultiplyMatrices(p_matrix A, p_matrix B) {
+    // Check that the two matrices are compatible for multiplication.
     if (A->size != B->size) {
-        fprintf(stderr, "Erreur : tailles incompatibles pour la multiplication.\n");
+        // Incompatible sizes
         return NULL;
     }
-
     int n = A->size;
+    // Create an empty n x n result matrix, initialized with 0
     p_matrix R = CreateEmptyMatrix(n);
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+    // Standard matrix multiplication: R = A * B
+    for (int i = 0; i < n; i++) {          // Row index of A and R
+        for (int j = 0; j < n; j++) {      // Column index of B and R
             float sum = 0.0f;
+
+            // Compute the dot product of row i of A and column j of B
             for (int k = 0; k < n; k++) {
                 sum += A->data[i][k] * B->data[k][j];
             }
+
             R->data[i][j] = sum;
         }
     }
 
-    return R;
+    return R;  // Return the resulting matrix
 }
 
 /**
