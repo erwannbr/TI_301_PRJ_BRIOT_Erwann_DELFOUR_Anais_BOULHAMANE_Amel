@@ -82,7 +82,6 @@ static char *getID(int i)
 
     return result;
 }
-
 //
 /**
  * @brief Checks if the graph satisfies Markov chain properties
