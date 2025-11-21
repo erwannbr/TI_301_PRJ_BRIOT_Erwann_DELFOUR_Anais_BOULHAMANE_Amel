@@ -33,7 +33,7 @@ p_matrix CreateEmptyMatrix(int n) {
 
     return M;
 }
-
+//
 
 /**
  * @brief Converts an adjacency list graph into a transition matrix (probability matrix).
