@@ -66,35 +66,37 @@ int *create_vertex_class_array(int vertex_count, const t_partition *partition) {
     return vertex_class;
 }
 
-
 /**
  * @brief Computes class‑to‑class links from a vertex adjacency list.
  * @param graph Pointer to the adjacency list
  * @param vertex_to_class Mapping from vertex to class
  * @param class_links Output: list of links between classes
  */
-void list_class_links(const t_adjacency_list *graph,
-                      const int *vertex_to_class,
-                      t_link_array *class_links)
-{
-    for (int source_vertex = 0; source_vertex < graph->size; ++source_vertex) {
-        int source_class = vertex_to_class[source_vertex];
+void list_class_links(const t_adjacency_list *graph, const int *vertex_to_class, t_link_array *class_links) {
+    // For each vertex i in the graph
+    for (int i= 0; i < graph->size; ++i) {
+        // Ci = class of vertex i
+        int Ci = vertex_to_class[i];
+        // Access the adjacency list of vertex i
+        p_cell neighbor = graph->array[i].head;
+        // Traverse all neighbors j of vertex i
+        while (neighbor != NULL) {
+            int j_id= neighbor->arrival; // Neighbor vertex ID
+            int j = j_id - 1; // Convert to 0-based index
 
-        p_cell neighbor_cell = graph->array[source_vertex].head;
-        while (neighbor_cell != NULL) {
-            int neighbor_id_1based = neighbor_cell->arrival;
-            int neighbor_index = neighbor_id_1based - 1;
+            if (j >= 0 && j < graph->size) {
+                // Cj = class of neighbor j
+                int Cj = vertex_to_class[j];
 
-            if (neighbor_index >= 0 && neighbor_index < graph->size) {
-                int destination_class = vertex_to_class[neighbor_index];
-
-                // Record inter‑class link only
-                if (source_class != destination_class) {
-                    links_add(class_links, source_class, destination_class);
+                // Only record links between *different* classes
+                if (Ci != Cj) {
+                    // Add the link (Ci → Cj) unless it already exists.
+                    // links_add() handles duplicate prevention and resizing.
+                    links_add(class_links, Ci, Cj);
                 }
             }
-
-            neighbor_cell = neighbor_cell->next;
+            // Move to the next neighbor in the adjacency list
+            neighbor = neighbor->next;
         }
     }
 }
@@ -150,38 +152,40 @@ void print_hasse_mermaid(const t_partition *P, const t_link_array *L, const char
 void removeTransitiveLinks(t_link_array *p_link_array)
 {
     int i = 0;
-    while (i < p_link_array->size)
-    {
-        t_link link1 = p_link_array->links[i];
+
+    // Iterate over each candidate link (A -> C)
+    while (i < p_link_array->size) {
+        t_link ac = p_link_array->links[i];  // candidate link: A -> C
         int to_remove = 0;
-
-        // Look for link1 = (A → C) being implied by A → B and B → C
+        // Look for an intermediate link A -> B
         for (int j = 0; j < p_link_array->size && !to_remove; j++) {
-            if (j == i) continue;
-
-            t_link link2 = p_link_array->links[j];
-
-            if (link1.start == link2.start) {
-                for (int k = 0; k < p_link_array->size && !to_remove; k++) {
-                    if (k == j || k == i) continue;
-
-                    t_link link3 = p_link_array->links[k];
-
-                    if (link3.start == link2.end && link3.end == link1.end)
-                        to_remove = 1;
+            if (j == i) continue; // skip the same link
+            t_link ab = p_link_array->links[j]; // potential A -> B
+            // We only care about links that start from the same A
+            if (ab.start != ac.start) continue;
+            // Now look for a link B -> C
+            for (int k = 0; k < p_link_array->size && !to_remove; k++) {
+                if (k == i || k == j) continue;
+                t_link bc = p_link_array->links[k]; // potential B -> C
+                // If we have A -> B and B -> C, then A -> C is transitive
+                if (bc.start == ab.end && bc.end == ac.end) {
+                    to_remove = 1;
                 }
             }
         }
-
         if (to_remove) {
-            // Remove link by replacing with last element
+            // Remove the transitive link A -> C by replacing it with the last link
             p_link_array->links[i] = p_link_array->links[p_link_array->size - 1];
             p_link_array->size--;
+            // Do not increment i here: we need to re-check the new element at index i
         } else {
+            // Keep this link and move to the next one
             i++;
         }
     }
 }
+
+
 
 /**
  * @brief Determines whether a class is transient.
