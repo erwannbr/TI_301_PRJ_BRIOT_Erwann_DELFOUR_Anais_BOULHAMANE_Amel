@@ -131,24 +131,36 @@ p_matrix MultiplyMatrices(p_matrix A, p_matrix B) {
  * @param N The second matrix.
  * @return float The total accumulated difference.
  */
+
 float DiffMatrix(p_matrix M, p_matrix N) {
+    // Check that both matrices have the same size
     if (M->size != N->size) {
-        fprintf(stderr, "Erreur : matrices de tailles différentes pour diffMatrix.\n");
-        return -1;
+        // Different sizes: return a negative value to signal an error
+        return -1.0f;
     }
 
     float diff;
-    float somme = 0.0f;
-    for (int i = 0; i < M->size; i++)
+    float sum = 0.0f;
+
+    // Compute the sum of absolute differences between all entries
+    for (int i = 0; i < M->size; i++) {
         for (int j = 0; j < M->size; j++) {
             diff = M->data[i][j] - N->data[i][j];
-            if (diff < 0) diff = -diff;
-            somme += diff;
+
+            // Take absolute value of the difference
+            if (diff < 0.0f) {
+                diff = -diff;
+            }
+
+            // Accumulate the absolute difference
+            sum += diff;
         }
+    }
 
-
-    return somme;
+    // Return the total difference between the two matrices
+    return sum;
 }
+
 
 /**
  * @brief Prints the matrix values to the standard output.
