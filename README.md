@@ -61,41 +61,41 @@ project/
 │   └── utils.h                   # Utility function prototypes  
 │  
 ├── DATA/  
-│   ├── example_meteo.txt         # Weather example
-│   ├── example_hasse1.txt        # Hasse diagram test
-│   ├── example_scc1.txt          # SCC test
-│   ├── example_valid_step3.txt   # 10-vertex validation
-│   ├── example1_chatGPT_fix...   # ChatGPT generated test
-│   ├── example1_from_chatg...    # Additional test case
-│   ├── example1.txt              # Basic test
-│   ├── example2.txt              # Test case 2
-│   ├── example3.txt              # Test case 3
-│   └── example4_2check.txt       # Verification test
-│
-├── CMakeLists.txt                # CMake configuration
-├── main.c                        # Program entry point
-└── README.md                     # This file
-
+│   ├── example_meteo.txt         # Weather example  
+│   ├── example_hasse1.txt        # Hasse diagram test  
+│   ├── example_scc1.txt          # SCC test  
+│   ├── example_valid_step3.txt   # 10-vertex validation  
+│   ├── example1_chatGPT_fix...   # ChatGPT generated test  
+│   ├── example1_from_chatg...    # Additional test case  
+│   ├── example1.txt              # Basic test  
+│   ├── example2.txt              # Test case 2  
+│   ├── example3.txt              # Test case 3  
+│   └── example4_2check.txt       # Verification test  
+│  
+├── CMakeLists.txt                # CMake configuration  
+├── main.c                        # Program entry point  
+└── README.md                     # This file  
+  
 
 # 🛠️ Compilation & Usage
 Requires Cmake or gcc
 
 # 📊 Input File Format
-<number_of_vertices>
-<start> <end> <probability>
-<start> <end> <probability>
-...
-Example (4 vertices):
-4
-1 1 0.95
-1 2 0.04
-1 3 0.01
-2 2 0.90
-2 3 0.05
-2 4 0.05
-3 3 0.80
-3 4 0.20
-4 1 1.00
+<number_of_vertices>  
+<start> <end> <probability>  
+<start> <end> <probability>  
+...  
+Example (4 vertices):  
+4  
+1 1 0.95  
+1 2 0.04  
+1 3 0.01  
+2 2 0.90  
+2 3 0.05  
+2 4 0.05  
+3 3 0.80  
+3 4 0.20  
+4 1 1.00  
 
 # 🔍 Features by Part
 
@@ -177,7 +177,7 @@ getPeriod() - Calculate class period
 findPeriodicDistributions() - Multiple stationary states
 
 # 📤 Output
-Initial distribution: Π₀ = (1 0 0 0 0)
+Initial distribution: Π₀ = (1 0 0 0 0)  
 After 3 days: Π₃ = (0.17 0.37 0.13 0.05 0.27)
 After 7 days: Π₇ = (0.16 0.36 0.13 0.05 0.29)
 
@@ -195,13 +195,13 @@ Rain
 Storm
 Sunny spells
 
-Transition Matrix M
-      1     2     3     4     5
-1  [0.30  0.40  0.20  0.05  0.05]
-2  [0.20  0.30  0.30  0.10  0.10]
-3  [0.10  0.20  0.30  0.20  0.20]
-4  [0.10  0.15  0.25  0.30  0.20]
-5  [0.25  0.25  0.10  0.05  0.35]
+Transition Matrix M  
+      1     2     3     4     5  
+1  [0.30  0.40  0.20  0.05  0.05]   
+2  [0.20  0.30  0.30  0.10  0.10]  
+3  [0.10  0.20  0.30  0.20  0.20]  
+4  [0.10  0.15  0.25  0.30  0.20]  
+5  [0.25  0.25  0.10  0.05  0.35]  
 Question: "If sunny today, what's probability of cloudy in 3 days?"
 Calculation:
 
