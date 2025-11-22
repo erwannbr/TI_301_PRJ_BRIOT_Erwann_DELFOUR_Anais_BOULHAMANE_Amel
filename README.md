@@ -30,26 +30,52 @@ BONUS: Calculate periodicity of classes
 
 
 # 📁 File Structure
-markov-project/
-├── src/
-│   ├── main.c
-│   ├── graph.c / graph.h          # Graph structures & operations
-│   ├── matrix.c / matrix.h        # Matrix calculations
-│   ├── tarjan.c / tarjan.h        # Tarjan's algorithm
-│   ├── hasse.c / hasse.h          # Hasse diagram generation
-│   └── utils.c / utils.h          # Helper functions
-├── data/
-│   ├── exemple_meteo.txt          # Weather example
-│   ├── exemple_valid_step3.txt    # 10-vertex validation
-│   └── [other test files]
-├── output/
-│   └── [generated .mmd files]
-├── docs/
-│   ├── sujet_partie1_EN.pdf
-│   ├── sujet_partie2_EN.pdf
-│   └── sujet_partie_3_EN.pdf
-├── Makefile
-└── README.md
+project/
+│
+├── adjacency_list/
+│   ├── adjacency_list.c          # Adjacency list implementation
+│   └── adjacency_list.h          # Adjacency list structures & prototypes
+│
+├── cell/
+│   ├── cell.c                    # Cell (edge) operations
+│   └── cell.h                    # Cell structure definition
+│
+├── list/
+│   ├── list.c                    # Linked list implementation
+│   └── list.h                    # List structures & prototypes
+│
+├── matrix/
+│   ├── matrix.c                  # Matrix operations (multiply, power, etc.)
+│   └── matrix.h                  # Matrix structure & prototypes
+│
+├── tarjan/
+│   ├── tarjan.c                  # Tarjan's algorithm implementation
+│   └── tarjan.h                  # Tarjan structures & prototypes
+│
+├── hasse/
+│   ├── hasse.c                   # Hasse diagram generation
+│   └── hasse.h                   # Hasse diagram prototypes
+│
+├── utils/
+│   ├── utils.c                   # Helper/utility functions
+│   └── utils.h                   # Utility function prototypes
+│
+├── DATA/
+│   ├── example_meteo.txt         # Weather example
+│   ├── example_hasse1.txt        # Hasse diagram test
+│   ├── example_scc1.txt          # SCC test
+│   ├── example_valid_step3.txt   # 10-vertex validation
+│   ├── example1_chatGPT_fix...   # ChatGPT generated test
+│   ├── example1_from_chatg...    # Additional test case
+│   ├── example1.txt              # Basic test
+│   ├── example2.txt              # Test case 2
+│   ├── example3.txt              # Test case 3
+│   └── example4_2check.txt       # Verification test
+│
+├── CMakeLists.txt                # CMake configuration
+├── main.c                        # Program entry point
+└── README.md                     # This file
+
 
 # 🛠️ Compilation & Usage
 Requires Cmake or gcc
