@@ -30,37 +30,37 @@ BONUS: Calculate periodicity of classes
 
 
 # 📁 File Structure
-project/
-│
+project/  
+│  
 ├── adjacency_list/
-│   ├── adjacency_list.c          # Adjacency list implementation
-│   └── adjacency_list.h          # Adjacency list structures & prototypes
-│
-├── cell/
-│   ├── cell.c                    # Cell (edge) operations
-│   └── cell.h                    # Cell structure definition
-│
-├── list/
-│   ├── list.c                    # Linked list implementation
-│   └── list.h                    # List structures & prototypes
-│
-├── matrix/
-│   ├── matrix.c                  # Matrix operations (multiply, power, etc.)
-│   └── matrix.h                  # Matrix structure & prototypes
-│
-├── tarjan/
-│   ├── tarjan.c                  # Tarjan's algorithm implementation
-│   └── tarjan.h                  # Tarjan structures & prototypes
-│
-├── hasse/
-│   ├── hasse.c                   # Hasse diagram generation
-│   └── hasse.h                   # Hasse diagram prototypes
-│
-├── utils/
-│   ├── utils.c                   # Helper/utility functions
-│   └── utils.h                   # Utility function prototypes
-│
-├── DATA/
+│   ├── adjacency_list.c          # Adjacency list implementation  
+│   └── adjacency_list.h          # Adjacency list structures & prototypes  
+│  
+├── cell/  
+│   ├── cell.c                    # Cell (edge) operations  
+│   └── cell.h                    # Cell structure definition   
+│  
+├── list/  
+│   ├── list.c                    # Linked list implementation  
+│   └── list.h                    # List structures & prototypes  
+│  
+├── matrix/  
+│   ├── matrix.c                  # Matrix operations (multiply, power, etc.)  
+│   └── matrix.h                  # Matrix structure & prototypes  
+│   
+├── tarjan/   
+│   ├── tarjan.c                  # Tarjan's algorithm implementation  
+│   └── tarjan.h                  # Tarjan structures & prototypes  
+│  
+├── hasse/  
+│   ├── hasse.c                   # Hasse diagram generation  
+│   └── hasse.h                   # Hasse diagram prototypes  
+│  
+├── utils/  
+│   ├── utils.c                   # Helper/utility functions  
+│   └── utils.h                   # Utility function prototypes  
+│  
+├── DATA/  
 │   ├── example_meteo.txt         # Weather example
 │   ├── example_hasse1.txt        # Hasse diagram test
 │   ├── example_scc1.txt          # SCC test
