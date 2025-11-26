@@ -152,7 +152,6 @@ void print_hasse_mermaid(const t_partition *P, const t_link_array *L, const char
 void removeTransitiveLinks(t_link_array *p_link_array)
 {
     int i = 0;
-
     // Iterate over each candidate link (A -> C)
     while (i < p_link_array->size) {
         t_link ac = p_link_array->links[i];  // candidate link: A -> C

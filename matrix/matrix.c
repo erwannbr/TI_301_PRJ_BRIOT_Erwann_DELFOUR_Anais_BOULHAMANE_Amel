@@ -203,23 +203,23 @@ void printMatrix(p_matrix M) {
 
 p_matrix subMatrix(p_matrix M, t_partition part, int compo_index)
 {
-    if (!M) return NULL;
-    if (compo_index < 0 || compo_index >= part.nb_class) return NULL;
+    if (!M) return NULL; // Check that the full matrix exists
+    if (compo_index < 0 || compo_index >= part.nb_class) return NULL; // Check that the class index is valid
 
-    t_class *cls = part.classes[compo_index];
-    int n = cls->nb_vertices;
-    if (n <= 0) return NULL;
+    t_class *cls = part.classes[compo_index]; // Get the class corresponding to the index
+    int n = cls->nb_vertices; // Number of vertices inside this class
+    if (n <= 0) return NULL; // A class with no vertices → no submatrix to build
 
-    // allocate an empty n×n submatrix
-    p_matrix sub = CreateEmptyMatrix(n);
+
+    p_matrix sub = CreateEmptyMatrix(n); // Create an empty n×n matrix where we will store the submatrix
     if (!sub) return NULL;
 
-    // fill the submatrix with the corresponding rows/columns
+    // Copy each row and column from M corresponding to the vertices of the class
     for (int i = 0; i < n; i++) {
-        int row = cls->vertices[i] - 1;   // 1-based → 0-based
+        int row = cls->vertices[i] - 1;''
         for (int j = 0; j < n; j++) {
             int col = cls->vertices[j] - 1;
-            sub->data[i][j] = M->data[row][col];
+            sub->data[i][j] = M->data[row][col]; // Copy the value from the full matrix into the submatrix
         }
     }
 

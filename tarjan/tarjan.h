@@ -35,6 +35,7 @@ t_tarjan_vertex * CreateArr (int n);
  *
  * Holds a dynamic list of vertex IDs that belong to this specific component.
  */
+
 typedef struct s_class {
     char name[10];
     int * vertices;
